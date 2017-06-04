@@ -11,9 +11,13 @@ sudo make compile
 
 The results will be in the {{.../target}} directory.
 
-## Install 
+## Install
 
-### Initial installation
+### RPM-based
+
+openSUSE, Fedora, CentOS, Mandrake
+
+#### RPM Install
 
 Example:
 
@@ -21,12 +25,24 @@ Example:
 sudo rpm -ivh go-hello-world-M.m.P-I.x86_64.rpm
 ```
 
-### Update
+#### RPM Update
 
 Example: 
 
 ```console
 sudo rpm -Uvh go-hello-world-M.m.P-I.x86_64.rpm
+```
+
+### Debian
+
+Ubuntu
+
+#### Debian Install / Update
+
+Example:
+
+```console
+sudo dpkg-i go-hello-world_M.m.P-I_amd64.deb
 ```
 
 ## Cleanup

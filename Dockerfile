@@ -20,9 +20,9 @@ ENV GO_VERSION=1.8.3
 
 # Install dependencies.
 RUN yum -y install \
-		git \
-        tar \
-        wget
+    git \
+    tar \
+    wget
 
 # Install "go".
 RUN wget https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz && \
@@ -68,12 +68,7 @@ RUN go install \
     -ldflags "-X main.gitVersion=${GIT_VERSION} -X main.gitIteration=${GIT_ITERATION}" \    
     github.com/docktermj/${PROGRAM_NAME}
 
-# In an active container, run a bash shell
-
-
 # --- Package files as RPM and DEB --------------------------------------------
-
-ENV X_REFRESHED_AT 2017-06-03
 
 RUN fpm \
   --input-type dir \
@@ -81,7 +76,7 @@ RUN fpm \
   --name ${PROGRAM_NAME} \
   --version ${GIT_VERSION} \
   --iteration ${GIT_ITERATION} \
-  /root/gocode/bin/=/opt/${PROGRAM_NAME}
+  /root/gocode/bin/=/usr/bin
 
 RUN fpm \
   --input-type dir \
@@ -89,7 +84,7 @@ RUN fpm \
   --name ${PROGRAM_NAME} \
   --version ${GIT_VERSION} \
   --iteration ${GIT_ITERATION} \
-  /root/gocode/bin/=/opt/${PROGRAM_NAME}
+  /root/gocode/bin/=/usr/bin
 
 # --- Epilog ------------------------------------------------------------------
 
