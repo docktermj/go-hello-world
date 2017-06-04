@@ -1,0 +1,98 @@
+FROM centos:7.1.1503
+
+ENV REFRESHED_AT 2017-06-03
+
+ARG PROGRAM_NAME="unknown"
+ARG GIT_VERSION=0.0.0
+ARG GIT_ITERATION=0
+
+# --- YUM installs ------------------------------------------------------------
+
+# Avoid "Error: libselinux conflicts with fakesystemd-1-17.el7.centos.noarch"
+RUN yum -y swap fakesystemd systemd && \
+    yum -y install systemd-devel
+    
+RUN yum -y update
+
+# --- Install Go --------------------------------------------------------------
+
+ENV GO_VERSION=1.8.3
+
+# Install dependencies.
+RUN yum -y install \
+		git \
+        tar \
+        wget
+
+# Install "go".
+RUN wget https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz && \
+    tar -C /usr/local/ -xzf go${GO_VERSION}.linux-amd64.tar.gz
+
+# --- Install Ruby 2.4.0 ------------------------------------------------------
+
+# Install dependencies.
+RUN yum -y install \
+    curl \
+    gcc \
+    make \
+    rpm-build \
+    ruby-devel \
+    which
+
+# Install Ruby Version Manager (RVM)
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+RUN curl -L get.rvm.io | bash -s stable
+
+# Install Ruby 2.4.0
+ENV PATH /usr/local/rvm/gems/ruby-2.4.0/bin:/usr/local/rvm/gems/ruby-2.4.0@global/bin:/usr/local/rvm/rubies/ruby-2.4.0/bin:/usr/local/rvm/bin:$PATH
+RUN rvm install 2.4.0
+
+# --- Install Effing Package Manager (FPM) ------------------------------------
+
+RUN gem install fpm --version 1.8.1
+
+# --- Compile program ---------------------------------------------------------
+
+ENV HOME="/root"
+ENV GOPATH="${HOME}/gocode"
+ENV PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
+
+# Install prerequisite "go" libraries.
+RUN go get github.com/docopt/docopt-go
+ 
+# ADD local files from the Git repository.
+ADD ./src ${GOPATH}/src
+
+# Build go program.
+RUN go install \ 
+    -ldflags "-X main.gitVersion=${GIT_VERSION} -X main.gitIteration=${GIT_ITERATION}" \    
+    github.com/docktermj/${PROGRAM_NAME}
+
+# In an active container, run a bash shell
+
+
+# --- Package files as RPM and DEB --------------------------------------------
+
+ENV X_REFRESHED_AT 2017-06-03
+
+RUN fpm \
+  --input-type dir \
+  --output-type rpm \
+  --name ${PROGRAM_NAME} \
+  --version ${GIT_VERSION} \
+  --iteration ${GIT_ITERATION} \
+  /root/gocode/bin/=/opt/${PROGRAM_NAME}
+
+RUN fpm \
+  --input-type dir \
+  --output-type deb \
+  --name ${PROGRAM_NAME} \
+  --version ${GIT_VERSION} \
+  --iteration ${GIT_ITERATION} \
+  /root/gocode/bin/=/opt/${PROGRAM_NAME}
+
+# --- Epilog ------------------------------------------------------------------
+
+RUN yum clean all
+
+CMD ["/bin/bash"]
