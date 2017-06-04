@@ -9,7 +9,7 @@ Where "M.m.P-I" is Major.minor.Patch-Iteration.
 sudo make compile
 ```
 
-The results will be in the {{.../target}} directory.
+The results will be in the `.../target` directory.
 
 ## Install
 
