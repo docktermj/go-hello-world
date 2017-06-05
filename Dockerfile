@@ -51,25 +51,27 @@ RUN rvm install 2.4.0
 
 RUN gem install fpm --version 1.8.1
 
-# --- Compile program ---------------------------------------------------------
+# --- Compile go program ------------------------------------------------------
 
 ENV HOME="/root"
 ENV GOPATH="${HOME}/gocode"
 ENV PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
+ENV GO_PACKAGE="github.com/docktermj/${PROGRAM_NAME}"
 
-# Install prerequisite "go" libraries.
+# Install dependencies.
 RUN go get github.com/docopt/docopt-go
- 
-# ADD local files from the Git repository.
-ADD ./src ${GOPATH}/src
+
+# Add local files from the Git repository.
+ADD . ${GOPATH}/src/${GO_PACKAGE}
 
 # Build go program.
-RUN go install \ 
-    -ldflags "-X main.gitVersion=${GIT_VERSION} -X main.gitIteration=${GIT_ITERATION}" \    
-    github.com/docktermj/${PROGRAM_NAME}
+RUN go install \
+    -ldflags "-X main.gitVersion=${GIT_VERSION} -X main.gitIteration=${GIT_ITERATION}" \
+    ${GO_PACKAGE}
 
-# --- Package files as RPM and DEB --------------------------------------------
+# --- Package as RPM and DEB --------------------------------------------------
 
+# RPM package.
 RUN fpm \
   --input-type dir \
   --output-type rpm \
@@ -78,6 +80,7 @@ RUN fpm \
   --iteration ${GIT_ITERATION} \
   /root/gocode/bin/=/usr/bin
 
+# DEB package.
 RUN fpm \
   --input-type dir \
   --output-type deb \

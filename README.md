@@ -1,7 +1,8 @@
 # go-hello-world
 
-Build `go-hello-world-M.m.P-I.x86_64.rpm`.
-Where "M.m.P-I" is Major.minor.Patch-Iteration.
+Build `go-hello-world-M.m.P-I.x86_64.rpm`
+and   `go-hello-world_M.m.P-I_amd64.deb`
+where "M.m.P-I" is Major.minor.Patch-Iteration.
 
 ## Usage
 
@@ -46,6 +47,14 @@ go get github.com/docopt/docopt-go
 
 ### Build
 
+#### Local build
+
+```console
+go install github.com/docktermj/go-hello-world
+```
+
+The results will be in the `${GOPATH}/bin` directory.
+
 #### Docker build
 
 ```console
@@ -54,14 +63,6 @@ sudo make compile
 ```
 
 The results will be in the `.../target` directory.
-
-#### Local build
-
-```console
-go install github.com/docktermj/go-hello-world
-```
-
-The results will be in the `${GOPATH}/bin` directory.
 
 ### Install
 
