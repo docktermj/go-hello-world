@@ -3,11 +3,29 @@
 Build `go-hello-world-M.m.P-I.x86_64.rpm`.
 Where "M.m.P-I" is Major.minor.Patch-Iteration.
 
+## Dependencies
+
+```console
+export GOPATH="${HOME}/gocode"
+export PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
+export PROJECT_DIR=${GOPATH}/src/github.com/docktermj
+mkdir -p ${PROJECT_DIR}
+cd ${PROJECT_DIR}
+git clone git@github.com:docktermj/go-hello-world.git
+```
+
+```console
+```
+
 ## Build
+
+### Docker build
 
 ```console
 sudo make compile
 ```
+
+### Local build
 
 The results will be in the `.../target` directory.
 
