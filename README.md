@@ -5,16 +5,27 @@ Where "M.m.P-I" is Major.minor.Patch-Iteration.
 
 ## Dependencies
 
+
+### Set environment variables
+
 ```console
 export GOPATH="${HOME}/gocode"
 export PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
 export PROJECT_DIR=${GOPATH}/src/github.com/docktermj
+```
+
+### Download project
+
+```console
 mkdir -p ${PROJECT_DIR}
 cd ${PROJECT_DIR}
 git clone git@github.com:docktermj/go-hello-world.git
 ```
 
+### Download dependencies
+
 ```console
+go get github.com/docopt/docopt-go
 ```
 
 ## Build
@@ -22,12 +33,19 @@ git clone git@github.com:docktermj/go-hello-world.git
 ### Docker build
 
 ```console
+cd ${PROJECT_DIR}/go-hello-world
 sudo make compile
 ```
 
+The results will be in the `.../target` directory.
+
 ### Local build
 
-The results will be in the `.../target` directory.
+```console
+go install github.com/docktermj/go-hello-world
+```
+
+The results will be in the `${GOPATH}/bin` directory.
 
 ## Install
 
