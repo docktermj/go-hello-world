@@ -3,10 +3,26 @@
 Build `go-hello-world-M.m.P-I.x86_64.rpm`.
 Where "M.m.P-I" is Major.minor.Patch-Iteration.
 
-## Dependencies
+## Usage
 
+A simple "hello world" program.
+The purpose of the repository it to show how to:
 
-### Set environment variables
+1. Build go executable locally
+1. Build go executable via Docker
+1. Build RPM / DEB installation via Docker.
+
+### Invocation
+
+```console
+go-hello-world
+```
+
+## Development
+
+### Dependencies
+
+#### Set environment variables
 
 ```console
 export GOPATH="${HOME}/gocode"
@@ -14,7 +30,7 @@ export PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
 export PROJECT_DIR=${GOPATH}/src/github.com/docktermj
 ```
 
-### Download project
+#### Download project
 
 ```console
 mkdir -p ${PROJECT_DIR}
@@ -22,15 +38,15 @@ cd ${PROJECT_DIR}
 git clone git@github.com:docktermj/go-hello-world.git
 ```
 
-### Download dependencies
+#### Download dependencies
 
 ```console
 go get github.com/docopt/docopt-go
 ```
 
-## Build
+### Build
 
-### Docker build
+#### Docker build
 
 ```console
 cd ${PROJECT_DIR}/go-hello-world
@@ -39,7 +55,7 @@ sudo make compile
 
 The results will be in the `.../target` directory.
 
-### Local build
+#### Local build
 
 ```console
 go install github.com/docktermj/go-hello-world
@@ -47,13 +63,13 @@ go install github.com/docktermj/go-hello-world
 
 The results will be in the `${GOPATH}/bin` directory.
 
-## Install
+### Install
 
-### RPM-based
+#### RPM-based
 
 openSUSE, Fedora, CentOS, Mandrake
 
-#### RPM Install
+##### RPM Install
 
 Example:
 
@@ -61,7 +77,7 @@ Example:
 sudo rpm -ivh go-hello-world-M.m.P-I.x86_64.rpm
 ```
 
-#### RPM Update
+##### RPM Update
 
 Example: 
 
@@ -69,11 +85,11 @@ Example:
 sudo rpm -Uvh go-hello-world-M.m.P-I.x86_64.rpm
 ```
 
-### Debian
+#### Debian
 
 Ubuntu
 
-#### Debian Install / Update
+##### Debian Install / Update
 
 Example:
 
@@ -81,7 +97,7 @@ Example:
 sudo dpkg-i go-hello-world_M.m.P-I_amd64.deb
 ```
 
-## Cleanup
+### Cleanup
 
 ```console
 sudo make clean
