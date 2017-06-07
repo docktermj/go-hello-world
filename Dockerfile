@@ -3,15 +3,15 @@ FROM centos:7.1.1503
 ENV REFRESHED_AT 2017-06-03
 
 ARG PROGRAM_NAME="unknown"
-ARG GIT_VERSION=0.0.0
-ARG GIT_ITERATION=0
+ARG BUILD_VERSION=0.0.0
+ARG BUILD_ITERATION=0
 
 # --- YUM installs ------------------------------------------------------------
 
 # Avoid "Error: libselinux conflicts with fakesystemd-1-17.el7.centos.noarch"
 RUN yum -y swap fakesystemd systemd && \
     yum -y install systemd-devel
-    
+
 RUN yum -y update
 
 # --- Install Go --------------------------------------------------------------
@@ -66,18 +66,20 @@ ADD . ${GOPATH}/src/${GO_PACKAGE}
 
 # Build go program.
 RUN go install \
-    -ldflags "-X main.gitVersion=${GIT_VERSION} -X main.gitIteration=${GIT_ITERATION}" \
+    -ldflags "-X main.buildVersion=${BUILD_VERSION} -X main.buildIteration=${BUILD_ITERATION}" \
     ${GO_PACKAGE}
 
 # --- Package as RPM and DEB --------------------------------------------------
+
+WORKDIR /output
 
 # RPM package.
 RUN fpm \
   --input-type dir \
   --output-type rpm \
   --name ${PROGRAM_NAME} \
-  --version ${GIT_VERSION} \
-  --iteration ${GIT_ITERATION} \
+  --version ${BUILD_VERSION} \
+  --iteration ${BUILD_ITERATION} \
   /root/gocode/bin/=/usr/bin
 
 # DEB package.
@@ -85,8 +87,8 @@ RUN fpm \
   --input-type dir \
   --output-type deb \
   --name ${PROGRAM_NAME} \
-  --version ${GIT_VERSION} \
-  --iteration ${GIT_ITERATION} \
+  --version ${BUILD_VERSION} \
+  --iteration ${BUILD_ITERATION} \
   /root/gocode/bin/=/usr/bin
 
 # --- Epilog ------------------------------------------------------------------
