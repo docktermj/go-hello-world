@@ -62,7 +62,7 @@ ENV GO_PACKAGE="github.com/docktermj/${PROGRAM_NAME}"
 RUN go get github.com/docopt/docopt-go
 
 # Add local files from the Git repository.
-ADD . ${GOPATH}/src/${GO_PACKAGE}
+COPY . ${GOPATH}/src/${GO_PACKAGE}
 
 # Build go program.
 RUN go install \
