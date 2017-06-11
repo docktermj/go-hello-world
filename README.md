@@ -59,7 +59,7 @@ The results will be in the `${GOPATH}/bin` directory.
 
 ```console
 cd ${PROJECT_DIR}/go-hello-world
-sudo make compile
+sudo make build
 ```
 
 The results will be in the `.../target` directory.
