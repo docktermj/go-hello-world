@@ -68,7 +68,7 @@ The results will be in the `.../target` directory.
 
 #### RPM-based
 
-openSUSE, Fedora, CentOS, Mandrake
+Example distributions: openSUSE, Fedora, CentOS, Mandrake
 
 ##### RPM Install
 
@@ -88,7 +88,7 @@ sudo rpm -Uvh go-hello-world-M.m.P-I.x86_64.rpm
 
 #### Debian
 
-Ubuntu
+Example distributions: Ubuntu
 
 ##### Debian Install / Update
 
