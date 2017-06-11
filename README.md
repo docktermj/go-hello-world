@@ -26,8 +26,8 @@ go-hello-world
 #### Set environment variables
 
 ```console
-export GOPATH="${HOME}/gocode"
-export PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
+export GOPATH="${HOME}/go"
+export PATH="${PATH}:${GOPATH}/bin:/usr/local/go/bin"
 export PROJECT_DIR=${GOPATH}/src/github.com/docktermj
 ```
 
