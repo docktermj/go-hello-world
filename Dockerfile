@@ -66,7 +66,7 @@ COPY . ${GOPATH}/src/${GO_PACKAGE}
 
 # Build go program.
 RUN go install \
-    -ldflags "-X main.buildVersion=${BUILD_VERSION} -X main.buildIteration=${BUILD_ITERATION}" \
+    -ldflags "-X main.programName=${PROGRAM_NAME} -X main.buildVersion=${BUILD_VERSION} -X main.buildIteration=${BUILD_ITERATION}" \
     ${GO_PACKAGE}
 
 # --- Package as RPM and DEB --------------------------------------------------

@@ -7,7 +7,7 @@ where "M.m.P-I" is Major.minor.Patch-Iteration.
 ## Usage
 
 A simple "hello world" program.
-The purpose of the repository it to show how to:
+The purpose of the repository is to show how to:
 
 1. Build go executable locally
 1. Build go executable via Docker
@@ -39,12 +39,6 @@ cd ${PROJECT_DIR}
 git clone git@github.com:docktermj/go-hello-world.git
 ```
 
-#### Download dependencies
-
-```console
-go get github.com/docopt/docopt-go
-```
-
 ### Build
 
 #### Local build
@@ -59,7 +53,7 @@ The results will be in the `${GOPATH}/bin` directory.
 
 ```console
 cd ${PROJECT_DIR}/go-hello-world
-sudo make build
+make build
 ```
 
 The results will be in the `.../target` directory.
@@ -101,5 +95,5 @@ sudo dpkg -i go-hello-world_M.m.P-I_amd64.deb
 ### Cleanup
 
 ```console
-sudo make clean
+make clean
 ```
