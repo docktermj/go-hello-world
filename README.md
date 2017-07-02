@@ -66,6 +66,13 @@ make build
 
 The results will be in the `.../target` directory.
 
+### Test
+
+```console
+cd ${PROJECT_DIR}/go-hello-world
+make test-local
+```
+
 ### Install
 
 #### RPM-based
