@@ -69,6 +69,17 @@ RUN go install \
     -ldflags "-X main.programName=${PROGRAM_NAME} -X main.buildVersion=${BUILD_VERSION} -X main.buildIteration=${BUILD_ITERATION}" \
     ${GO_PACKAGE}
 
+# Copy binary to output.
+RUN mkdir -p /output/bin && \
+    cp /root/gocode/bin/${PROGRAM_NAME} /output/bin
+
+# --- Test go program ---------------------------------------------------------
+
+# Run unit tests
+RUN go get github.com/jstemmer/go-junit-report && \
+    mkdir -p /output/go-junit-report && \
+    go test -v ${GO_PACKAGE}/... | go-junit-report > /output/go-junit-report/test-report.xml
+
 # --- Package as RPM and DEB --------------------------------------------------
 
 WORKDIR /output

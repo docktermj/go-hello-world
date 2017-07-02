@@ -39,12 +39,20 @@ cd ${PROJECT_DIR}
 git clone git@github.com:docktermj/go-hello-world.git
 ```
 
+#### Download dependencies
+
+```console
+cd ${PROJECT_DIR}/go-hello-world
+make dependencies
+```
+
 ### Build
 
 #### Local build
 
 ```console
-go install github.com/docktermj/go-hello-world
+cd ${PROJECT_DIR}/go-hello-world
+make build-local
 ```
 
 The results will be in the `${GOPATH}/bin` directory.

@@ -2,18 +2,44 @@
 
 # PROGRAM_NAME is the name of the GIT repository.
 PROGRAM_NAME := $(shell basename `git rev-parse --show-toplevel`)
-DOCKER_IMAGE_NAME := local/$(PROGRAM_NAME)
+TARGET_DIRECTORY := ./target
 DOCKER_CONTAINER_NAME := $(PROGRAM_NAME)
+DOCKER_IMAGE_NAME := local/$(PROGRAM_NAME)
 BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty)
 BUILD_TAG := $(shell git describe --always --tags --abbrev=0)
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l)
 
-.PHONY: help
-help:
-	@echo "Build $(PROGRAM_NAME) version $(BUILD_VERSION)-$(BUILD_ITERATION)".
-	@echo "To build, run 'make build'"
-	@echo "All targets:"
-	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | xargs
+
+# The first "make" target runs as default.
+.PHONY: default
+default: build-local
+
+# -----------------------------------------------------------------------------
+# Local development
+# -----------------------------------------------------------------------------
+
+.PHONY: build-local
+build-local:
+	go install github.com/docktermj/$(PROGRAM_NAME)
+
+
+.PHONY: test-local
+test-local:
+	go test github.com/docktermj/$(PROGRAM_NAME)/... 
+
+# -----------------------------------------------------------------------------
+# Docker-based development
+# -----------------------------------------------------------------------------
+
+.PHONY: build
+build: docker-build
+	mkdir -p $(TARGET_DIRECTORY) || true
+	docker rm --force $(DOCKER_CONTAINER_NAME) || true
+	docker create \
+		--name $(DOCKER_CONTAINER_NAME) \
+		$(DOCKER_IMAGE_NAME)
+	docker cp $(DOCKER_CONTAINER_NAME):/output/. $(TARGET_DIRECTORY) || true
+	docker rm --force $(DOCKER_CONTAINER_NAME)
 
 
 .PHONY: docker-build
@@ -25,18 +51,10 @@ docker-build:
 		--tag $(DOCKER_IMAGE_NAME) \
 		.
 
-
-.PHONY: build
-build: clean docker-build
-	mkdir -p ./target || true
-	docker create \
-		--name $(DOCKER_CONTAINER_NAME) \
-		$(DOCKER_IMAGE_NAME)
-	docker cp $(DOCKER_CONTAINER_NAME):/output/. ./target/
-	docker cp $(DOCKER_CONTAINER_NAME):/root/gocode/bin/$(PROGRAM_NAME) ./target/
-	docker rm --force $(DOCKER_CONTAINER_NAME)
-
-
+# -----------------------------------------------------------------------------
+# Utility targets
+# -----------------------------------------------------------------------------
+	
 .PHONY: docker-run
 docker-run:
 	docker run \
@@ -46,7 +64,19 @@ docker-run:
 	    $(DOCKER_IMAGE_NAME)
 
 
+.PHONY: dependencies
+dependencies:
+	go get -u github.com/jstemmer/go-junit-report  	
+
+
 .PHONY: clean
 clean:
 	docker rm --force $(DOCKER_CONTAINER_NAME) || true
-	rm -rf ./target
+	rm -rf $(TARGET_DIRECTORY)
+
+
+.PHONY: help
+help:
+	@echo "Build $(PROGRAM_NAME) version $(BUILD_VERSION)-$(BUILD_ITERATION)".
+	@echo "All targets:"
+	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | xargs
