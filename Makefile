@@ -54,7 +54,7 @@ docker-build:
 # -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
-	
+
 .PHONY: docker-run
 docker-run:
 	docker run \
@@ -66,7 +66,7 @@ docker-run:
 
 .PHONY: dependencies
 dependencies:
-	go get -u github.com/jstemmer/go-junit-report  	
+	go get -u github.com/jstemmer/go-junit-report
 
 
 .PHONY: clean
