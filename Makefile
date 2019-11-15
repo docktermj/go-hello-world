@@ -9,10 +9,10 @@ BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty)
 BUILD_TAG := $(shell git describe --always --tags --abbrev=0)
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l)
 
-
 # The first "make" target runs as default.
+
 .PHONY: default
-default: build-local
+default: help
 
 # -----------------------------------------------------------------------------
 # Local development
@@ -66,6 +66,7 @@ docker-run:
 
 .PHONY: dependencies
 dependencies:
+	go get ./...
 	go get -u github.com/jstemmer/go-junit-report
 
 

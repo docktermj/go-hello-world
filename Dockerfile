@@ -9,6 +9,7 @@ ARG BUILD_ITERATION=0
 # --- YUM installs ------------------------------------------------------------
 
 # Avoid "Error: libselinux conflicts with fakesystemd-1-17.el7.centos.noarch"
+
 RUN yum -y swap fakesystemd systemd && \
     yum -y install systemd-devel
 
@@ -59,17 +60,21 @@ ENV PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
 ENV GO_PACKAGE="github.com/docktermj/${PROGRAM_NAME}"
 
 # Install dependencies.
+
 RUN go get github.com/docopt/docopt-go
 
 # Copy local files from the Git repository.
+
 COPY . ${GOPATH}/src/${GO_PACKAGE}
 
 # Build go program.
+
 RUN go install \
     -ldflags "-X main.programName=${PROGRAM_NAME} -X main.buildVersion=${BUILD_VERSION} -X main.buildIteration=${BUILD_ITERATION}" \
     ${GO_PACKAGE}
 
 # Copy binary to output.
+
 RUN mkdir -p /output/bin && \
     cp /root/gocode/bin/${PROGRAM_NAME} /output/bin
 
@@ -85,6 +90,7 @@ RUN go get github.com/jstemmer/go-junit-report && \
 WORKDIR /output
 
 # RPM package.
+
 RUN fpm \
   --input-type dir \
   --output-type rpm \
@@ -94,6 +100,7 @@ RUN fpm \
   /root/gocode/bin/=/usr/bin
 
 # DEB package.
+
 RUN fpm \
   --input-type dir \
   --output-type deb \
