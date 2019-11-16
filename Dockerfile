@@ -6,7 +6,7 @@ ARG PROGRAM_NAME="unknown"
 ARG BUILD_VERSION=0.0.0
 ARG BUILD_ITERATION=0
 
-# --- YUM installs ------------------------------------------------------------
+# --- Install system packages -------------------------------------------------
 
 # Avoid "Error: libselinux conflicts with fakesystemd-1-17.el7.centos.noarch"
 
@@ -15,27 +15,13 @@ RUN yum -y swap fakesystemd systemd \
 
 RUN yum -y update
 
-# --- Install Go --------------------------------------------------------------
-
-ENV GO_VERSION=1.13.4
-
-# Install dependencies.
+# Install [base, ruby] dependencies.
 
 RUN yum -y install \
     git \
     tar \
-    wget
-
-# Install "go".
-
-RUN wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
- && tar -C /usr/local/ -xzf go${GO_VERSION}.linux-amd64.tar.gz
-
-# --- Install Ruby 2.4.0 ------------------------------------------------------
-
-# Install dependencies.
-
-RUN yum -y install \
+    wget \
+ && yum -y install \
     gcc \
     make \
     rpm-build \
@@ -43,9 +29,18 @@ RUN yum -y install \
     rubygems \
     which
 
-# --- Install Effing Package Manager (FPM) ------------------------------------
+# Install Effing Package Manager (FPM).
 
 RUN gem install --no-ri --no-rdoc fpm
+
+# --- Install Go --------------------------------------------------------------
+
+ENV GO_VERSION=1.13.4
+
+# Install "go".
+
+RUN wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
+ && tar -C /usr/local/ -xzf go${GO_VERSION}.linux-amd64.tar.gz
 
 # --- Compile go program ------------------------------------------------------
 
@@ -64,12 +59,17 @@ COPY . ${GOPATH}/src/${GO_PACKAGE}
 
 # Build go program.
 
-RUN go get -u ./... \
+WORKDIR ${GOPATH}/src/${GO_PACKAGE}
+
+RUN mkdir ~/.ssh \
+ && touch ~/.ssh/known_hosts \
+ && ssh-keyscan github.com >> ~/.ssh/known_hosts \
+ && go get -u ./... \
  && go install \
     -ldflags  \
-      "-X main.programName=${PROGRAM_NAME}" \
-      "-X main.buildVersion=${BUILD_VERSION}" \
-      "-X main.buildIteration=${BUILD_ITERATION}" \
+      "-X main.programName=${PROGRAM_NAME} \
+       -X main.buildVersion=${BUILD_VERSION} \
+       -X main.buildIteration=${BUILD_ITERATION}" \
     ${GO_PACKAGE}
 
 # Copy binary to output.
@@ -81,9 +81,9 @@ RUN mkdir -p /output/bin \
 
 # Run unit tests.
 
-RUN go get github.com/jstemmer/go-junit-report \
- && mkdir -p /output/go-junit-report \
- && go test -v ${GO_PACKAGE}/... | go-junit-report > /output/go-junit-report/test-report.xml
+# RUN go get github.com/jstemmer/go-junit-report \
+#  && mkdir -p /output/go-junit-report \
+#  && go test -v ${GO_PACKAGE}/... | go-junit-report > /output/go-junit-report/test-report.xml
 
 # --- Package as RPM and DEB --------------------------------------------------
 
