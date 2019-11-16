@@ -23,9 +23,22 @@ The purpose of the repository is to show how to:
 
 ## Development
 
-### Dependencies
+### Prerequisite software
 
-#### Set environment variables
+1. FIXME: See [build dependencies](https://github.com/docktermj/KnowledgeBase/blob/master/build-dependencies/packer.md).
+
+### Clone repository
+
+1. Set these environment variable values:
+
+    ```console
+    export GIT_ACCOUNT=docktermj
+    export GIT_REPOSITORY=go-hello-world
+    export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
+    export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
+    ```
+
+### Set environment variables
 
 1. :pencil2: Set Go environment variables.
    Example:
@@ -35,34 +48,12 @@ The purpose of the repository is to show how to:
     export PATH="${PATH}:${GOPATH}/bin:/usr/local/go/bin"
     ```
 
-1. :pencil2: Set Git Repository variables.
-   Example:
-
-    ```console
-    export GIT_ACCOUNT=docktermj
-    export GIT_REPOSITORY=go-hello-world
-    ```
-
-1. Set filesystem variables.
-   Example:
-
-    ```console
-    export GIT_PROJECT_DIR="${GOPATH}/src/github.com/${GIT_ACCOUNT}"
-    export GIT_REPOSITORY_DIR="${GIT_PROJECT_DIR}/${GIT_REPOSITORY}"
-    ```
-
 #### Download project
 
-1. Option #1. Download via `git`.
-   Example:
+1. **Option #1:** Download via `git`.
+   Follow steps in [clone-repository](https://github.com/docktermj/KnowledgeBase/blob/master/HowTo/clone-repository.md) to install the Git repository.
 
-    ```console
-    mkdir -p ${GIT_PROJECT_DIR}
-    cd ${GIT_PROJECT_DIR}
-    git clone git@github.com:docktermj/go-hello-world.git
-    ```
-
-1. Option #2. Download via `go`.   This is like `git clone https://...`
+1. **Option #2:** Download via `go`.   This is like `git clone https://...`
    Example:
 
     ```console
@@ -161,3 +152,9 @@ Example distributions: openSUSE, Fedora, CentOS, Mandrake
     cd ${REPOSITORY_DIR}
     make clean
     ```
+
+## References
+
+1. [Using Go Modules](https://blog.golang.org/using-go-modules)
+1. [Simple Go project layout with modules ](https://eli.thegreenplace.net/2019/simple-go-project-layout-with-modules/)
+1. [Project layout](https://github.com/golang-standards/project-layout)

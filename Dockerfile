@@ -1,6 +1,6 @@
 FROM centos:7.1.1503
 
-ENV REFRESHED_AT 2017-06-03
+ENV REFRESHED_AT 2017-11-16
 
 ARG PROGRAM_NAME="unknown"
 ARG BUILD_VERSION=0.0.0
@@ -10,47 +10,42 @@ ARG BUILD_ITERATION=0
 
 # Avoid "Error: libselinux conflicts with fakesystemd-1-17.el7.centos.noarch"
 
-RUN yum -y swap fakesystemd systemd && \
-    yum -y install systemd-devel
+RUN yum -y swap fakesystemd systemd \
+ && yum -y install systemd-devel
 
 RUN yum -y update
 
 # --- Install Go --------------------------------------------------------------
 
-ENV GO_VERSION=1.8.3
+ENV GO_VERSION=1.13.4
 
 # Install dependencies.
+
 RUN yum -y install \
     git \
     tar \
     wget
 
 # Install "go".
-RUN wget https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz && \
-    tar -C /usr/local/ -xzf go${GO_VERSION}.linux-amd64.tar.gz
+
+RUN wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
+ && tar -C /usr/local/ -xzf go${GO_VERSION}.linux-amd64.tar.gz
 
 # --- Install Ruby 2.4.0 ------------------------------------------------------
 
 # Install dependencies.
+
 RUN yum -y install \
-    curl \
     gcc \
     make \
     rpm-build \
     ruby-devel \
+    rubygems \
     which
-
-# Install Ruby Version Manager (RVM)
-RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-RUN curl -L get.rvm.io | bash -s stable
-
-# Install Ruby 2.4.0
-ENV PATH /usr/local/rvm/gems/ruby-2.4.0/bin:/usr/local/rvm/gems/ruby-2.4.0@global/bin:/usr/local/rvm/rubies/ruby-2.4.0/bin:/usr/local/rvm/bin:$PATH
-RUN rvm install 2.4.0
 
 # --- Install Effing Package Manager (FPM) ------------------------------------
 
-RUN gem install fpm --version 1.8.1
+RUN gem install --no-ri --no-rdoc fpm
 
 # --- Compile go program ------------------------------------------------------
 
@@ -69,21 +64,26 @@ COPY . ${GOPATH}/src/${GO_PACKAGE}
 
 # Build go program.
 
-RUN go install \
-    -ldflags "-X main.programName=${PROGRAM_NAME} -X main.buildVersion=${BUILD_VERSION} -X main.buildIteration=${BUILD_ITERATION}" \
+RUN go get -u ./... \
+ && go install \
+    -ldflags  \
+      "-X main.programName=${PROGRAM_NAME}" \
+      "-X main.buildVersion=${BUILD_VERSION}" \
+      "-X main.buildIteration=${BUILD_ITERATION}" \
     ${GO_PACKAGE}
 
 # Copy binary to output.
 
-RUN mkdir -p /output/bin && \
-    cp /root/gocode/bin/${PROGRAM_NAME} /output/bin
+RUN mkdir -p /output/bin \
+ && cp /root/gocode/bin/${PROGRAM_NAME} /output/bin
 
 # --- Test go program ---------------------------------------------------------
 
-# Run unit tests
-RUN go get github.com/jstemmer/go-junit-report && \
-    mkdir -p /output/go-junit-report && \
-    go test -v ${GO_PACKAGE}/... | go-junit-report > /output/go-junit-report/test-report.xml
+# Run unit tests.
+
+RUN go get github.com/jstemmer/go-junit-report \
+ && mkdir -p /output/go-junit-report \
+ && go test -v ${GO_PACKAGE}/... | go-junit-report > /output/go-junit-report/test-report.xml
 
 # --- Package as RPM and DEB --------------------------------------------------
 
