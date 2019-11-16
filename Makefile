@@ -34,13 +34,9 @@ test-local:
 .PHONY: build
 build: docker-build
 	mkdir -p $(TARGET_DIRECTORY) || true
-	docker rm --force $(DOCKER_CONTAINER_NAME) || true
-	docker create \
-		--name $(DOCKER_CONTAINER_NAME) \
-		$(DOCKER_IMAGE_NAME)
-	docker cp $(DOCKER_CONTAINER_NAME):/output/. $(TARGET_DIRECTORY) || true
-	docker rm --force $(DOCKER_CONTAINER_NAME)
-
+	PID=$$(docker create $(DOCKER_IMAGE_NAME)); \
+	docker cp $$PID:/output/. $(TARGET_DIRECTORY)/; \
+	docker rm -v $$PID
 
 .PHONY: docker-build
 docker-build:

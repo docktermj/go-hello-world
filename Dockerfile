@@ -49,10 +49,6 @@ ENV GOPATH="${HOME}/gocode"
 ENV PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
 ENV GO_PACKAGE="github.com/docktermj/${PROGRAM_NAME}"
 
-# Install dependencies.
-
-RUN go get github.com/docopt/docopt-go
-
 # Copy local files from the Git repository.
 
 COPY . ${GOPATH}/src/${GO_PACKAGE}
@@ -69,7 +65,9 @@ RUN mkdir ~/.ssh \
     -ldflags  \
       "-X main.programName=${PROGRAM_NAME} \
        -X main.buildVersion=${BUILD_VERSION} \
-       -X main.buildIteration=${BUILD_ITERATION}" \
+       -X main.buildIteration=${BUILD_ITERATION} \
+       -X github.com/docktermj/go-hello-world-module.helloName=Bob \
+      " \
     ${GO_PACKAGE}
 
 # Copy binary to output.
