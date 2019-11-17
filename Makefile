@@ -19,18 +19,18 @@ default: help
 # -----------------------------------------------------------------------------
 
 .PHONY: local-dependencies
-dependencies:
+local-dependencies:
 	go get ./...
 	go get -u github.com/jstemmer/go-junit-report
 	
 	
 .PHONY: local-build
-build-local:
+local-build:
 	go install github.com/docktermj/$(PROGRAM_NAME)
 
 
 .PHONY: local-test
-test-local:
+local-test:
 	go test github.com/docktermj/$(PROGRAM_NAME)/... 
 
 # -----------------------------------------------------------------------------
