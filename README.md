@@ -146,7 +146,7 @@ The following software programs need to be installed:
     apt list --installed | grep go-hello-world
     ```
 
-1. :pencil: Install `go-hello-world`.
+1. :pencil2: Install `go-hello-world`.
    Example:
 
     ```console
@@ -177,7 +177,7 @@ The following software programs need to be installed:
     yum list installed | grep go-hello-world
     ```
 
-1. :pencil: Install `go-hello-world`.
+1. :pencil2: Install `go-hello-world`.
    Example:
 
     ```console
