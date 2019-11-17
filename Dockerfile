@@ -45,7 +45,7 @@ ARG BUILD_ITERATION=0
 ARG HELLO_NAME="Bob"
 
 ENV HOME="/root"
-ENV GOPATH="${HOME}/gocode"
+ENV GOPATH="${HOME}/go"
 ENV PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
 ENV GO_PACKAGE="github.com/docktermj/${PROGRAM_NAME}"
 
@@ -73,7 +73,7 @@ RUN mkdir ~/.ssh \
 # Copy binary to output.
 
 RUN mkdir -p /output/bin \
- && cp /root/gocode/bin/${PROGRAM_NAME} /output/bin
+ && cp /root/go/bin/${PROGRAM_NAME} /output/bin
 
 # --- Test go program ---------------------------------------------------------
 
@@ -95,7 +95,7 @@ RUN fpm \
   --name ${PROGRAM_NAME} \
   --version ${BUILD_VERSION} \
   --iteration ${BUILD_ITERATION} \
-  /root/gocode/bin/=/usr/bin
+  /root/go/bin/=/usr/bin
 
 # DEB package.
 
@@ -105,7 +105,7 @@ RUN fpm \
   --name ${PROGRAM_NAME} \
   --version ${BUILD_VERSION} \
   --iteration ${BUILD_ITERATION} \
-  /root/gocode/bin/=/usr/bin
+  /root/go/bin/=/usr/bin
 
 # --- Epilog ------------------------------------------------------------------
 
