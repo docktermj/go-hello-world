@@ -9,6 +9,7 @@ where "M.m.P-I" is Major.minor.Patch-Iteration.
 A simple "hello world" program.
 The purpose of the repository is to show how to:
 
+1. Use go modules
 1. Build go executable locally
 1. Build go executable via Docker
 1. Build RPM / DEB installation via Docker.
@@ -21,11 +22,31 @@ The purpose of the repository is to show how to:
     go-hello-world
     ```
 
-## Development
+## Prerequisites
 
-### Dependencies
+### Prerequisite software
 
-#### Set environment variables
+The following software programs need to be installed:
+
+1. [git](https://github.com/docktermj/KnowledgeBase/blob/master/software/git.md#installation)
+1. [docker](https://github.com/docktermj/KnowledgeBase/blob/master/software/docker.md#installation)
+1. [go](https://github.com/docktermj/KnowledgeBase/blob/master/software/go.md#installation)
+
+### Clone repository
+
+1. Set these environment variable values:
+
+    ```console
+    export GIT_ACCOUNT=docktermj
+    export GIT_REPOSITORY=go-hello-world
+    export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
+    export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
+    ```
+
+1. Follow steps in [clone-repository](https://github.com/docktermj/KnowledgeBase/blob/master/HowTo/clone-repository.md)
+   to install the Git repository.
+
+### Set environment variables
 
 1. :pencil2: Set Go environment variables.
    Example:
@@ -35,67 +56,78 @@ The purpose of the repository is to show how to:
     export PATH="${PATH}:${GOPATH}/bin:/usr/local/go/bin"
     ```
 
-1. :pencil2: Set Git Repository variables.
-   Example:
+## Development
 
-    ```console
-    export GIT_ACCOUNT=docktermj
-    export GIT_REPOSITORY=go-hello-world
-    ```
+### Download dependencies
 
-1. Set filesystem variables.
-   Example:
-
-    ```console
-    export GIT_PROJECT_DIR="${GOPATH}/src/github.com/${GIT_ACCOUNT}"
-    export GIT_REPOSITORY_DIR="${GIT_PROJECT_DIR}/${GIT_REPOSITORY}"
-    ```
-
-#### Download project
-
-1. Option #1. Download via `git`.
-   Example:
-
-    ```console
-    mkdir -p ${GIT_PROJECT_DIR}
-    cd ${GIT_PROJECT_DIR}
-    git clone git@github.com:docktermj/go-hello-world.git
-    ```
-
-1. Option #2. Download via `go`.   This is like `git clone https://...`
-   Example:
-
-    ```console
-    go get github.com/${GIT_ACCOUNT}/${GIT_REPOSITORY}
-    ```
-
-#### Download dependencies
-
-1. XXX.
+1. Dependencies.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make dependencies
+    make local-dependencies
     ```
 
 ### Build
 
-#### Local build
-
-1. XXX
+1. Build.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make build-local
+    make local-build
     ```
 
    The results will be in the `${GOPATH}/bin` directory.
 
-#### Docker build
+### Run
 
-1. XXX
+1. Run.
+   Example:
+
+    ```console
+    go-hello-world
+    ```
+
+    or
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    go run main.go
+    ```
+
+### Test
+
+1. Test
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make local-test
+    ```
+
+    or
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    go test
+    ```
+
+### Cleanup
+
+1. Delete.
+   Example:
+
+    ```console
+    cd ${REPOSITORY_DIR}
+    make clean
+    ```
+
+## Create package
+
+### Build RPM and DEB files
+
+1. Use make target to run a docker images that builds RPM and DEB files.
    Example:
 
     ```console
@@ -105,59 +137,70 @@ The purpose of the repository is to show how to:
 
    The results will be in the `.../target` directory.
 
-### Test
+## Test DEB package on Ubuntu
 
-1. XXX
+1. Determine if `go-hello-world` is installed.
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make test-local
+    apt list --installed | grep go-hello-world
     ```
 
-### Install
-
-#### RPM-based
-
-Example distributions: openSUSE, Fedora, CentOS, Mandrake
-
-##### RPM Install
-
-1. XXX
+1. :pencil2: Install `go-hello-world`.
    Example:
 
     ```console
-    sudo rpm -ivh go-hello-world-M.m.P-I.x86_64.rpm
+    cd ${GIT_REPOSITORY_DIR}/target
+    sudo apt install ./go-hello-world_0.0.0_amd64.deb
     ```
 
-##### RPM Update
-
-1. XXX
+1. Run command.
    Example:
 
     ```console
-    sudo rpm -Uvh go-hello-world-M.m.P-I.x86_64.rpm
+    go-hello-world
     ```
 
-#### Debian
-
-1. Example distributions: Ubuntu
-
-##### Debian Install / Update
-
-1. XXX
+1. Remove `go-hello-world` from system.
    Example:
 
     ```console
-    sudo dpkg -i go-hello-world_M.m.P-I_amd64.deb
+    sudo apt-get remove go-hello-world
     ```
 
-### Cleanup
+## Test RPM package on Centos
 
-1. XXX
+1. Determine if `go-hello-world` is installed.
    Example:
 
     ```console
-    cd ${REPOSITORY_DIR}
-    make clean
+    yum list installed | grep go-hello-world
     ```
+
+1. :pencil2: Install `go-hello-world`.
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}/target
+    sudo yum install ./go-hello-world_0.0.0_amd64.rpm
+    ```
+
+1. Run command.
+   Example:
+
+    ```console
+    go-hello-world
+    ```
+
+1. Remove `go-hello-world` from system.
+   Example:
+
+    ```console
+    sudo yum remove go-hello-world
+    ```
+
+## References
+
+1. [Using Go Modules](https://blog.golang.org/using-go-modules)
+1. [Simple Go project layout with modules](https://eli.thegreenplace.net/2019/simple-go-project-layout-with-modules/)
+1. [Project layout](https://github.com/golang-standards/project-layout)

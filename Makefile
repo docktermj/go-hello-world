@@ -18,13 +18,19 @@ default: help
 # Local development
 # -----------------------------------------------------------------------------
 
-.PHONY: build-local
-build-local:
+.PHONY: local-dependencies
+local-dependencies:
+	go get ./...
+	go get -u github.com/jstemmer/go-junit-report
+	
+	
+.PHONY: local-build
+local-build:
 	go install github.com/docktermj/$(PROGRAM_NAME)
 
 
-.PHONY: test-local
-test-local:
+.PHONY: local-test
+local-test:
 	go test github.com/docktermj/$(PROGRAM_NAME)/... 
 
 # -----------------------------------------------------------------------------
@@ -34,13 +40,9 @@ test-local:
 .PHONY: build
 build: docker-build
 	mkdir -p $(TARGET_DIRECTORY) || true
-	docker rm --force $(DOCKER_CONTAINER_NAME) || true
-	docker create \
-		--name $(DOCKER_CONTAINER_NAME) \
-		$(DOCKER_IMAGE_NAME)
-	docker cp $(DOCKER_CONTAINER_NAME):/output/. $(TARGET_DIRECTORY) || true
-	docker rm --force $(DOCKER_CONTAINER_NAME)
-
+	CONTAINER_ID=$$(docker create $(DOCKER_IMAGE_NAME)); \
+	docker cp $$CONTAINER_ID:/output/. $(TARGET_DIRECTORY)/; \
+	docker rm -v $$CONTAINER_ID
 
 .PHONY: docker-build
 docker-build:
@@ -64,16 +66,11 @@ docker-run:
 	    $(DOCKER_IMAGE_NAME)
 
 
-.PHONY: dependencies
-dependencies:
-	go get ./...
-	go get -u github.com/jstemmer/go-junit-report
-
-
 .PHONY: clean
 clean:
 	docker rm --force $(DOCKER_CONTAINER_NAME) || true
 	rm -rf $(TARGET_DIRECTORY)
+	rm $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
 .PHONY: help
