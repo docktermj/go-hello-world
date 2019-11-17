@@ -86,6 +86,12 @@ The following software programs need to be installed:
    Example:
 
     ```console
+    go-hello-world
+    ```
+
+    or
+
+    ```console
     cd ${GIT_REPOSITORY_DIR}
     go run main.go
     ```
