@@ -70,7 +70,7 @@ The following software programs need to be installed:
 
 ### Build
 
-1. XXX
+1. Build.
    Example:
 
     ```console
@@ -82,7 +82,7 @@ The following software programs need to be installed:
 
 ### Test
 
-1. XXX
+1. Test
    Example:
 
     ```console
@@ -92,7 +92,7 @@ The following software programs need to be installed:
 
 ### Cleanup
 
-1. XXX
+1. Delete.
    Example:
 
     ```console
@@ -101,8 +101,6 @@ The following software programs need to be installed:
     ```
 
 ## Create package
-
-
 
 ### Build RPM and DEB files
 
