@@ -18,18 +18,18 @@ default: help
 # Local development
 # -----------------------------------------------------------------------------
 
-.PHONY: dependencies-local
+.PHONY: local-dependencies
 dependencies:
 	go get ./...
 	go get -u github.com/jstemmer/go-junit-report
 	
 	
-.PHONY: build-local
+.PHONY: local-build
 build-local:
 	go install github.com/docktermj/$(PROGRAM_NAME)
 
 
-.PHONY: test-local
+.PHONY: local-test
 test-local:
 	go test github.com/docktermj/$(PROGRAM_NAME)/... 
 
@@ -70,7 +70,7 @@ docker-run:
 clean:
 	docker rm --force $(DOCKER_CONTAINER_NAME) || true
 	rm -rf $(TARGET_DIRECTORY)
-	rm ${GOPATH}/bin/$(PROGRAM_NAME) || true
+	rm $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
 .PHONY: help
