@@ -55,6 +55,20 @@ The following software programs need to be installed:
     export PATH="${PATH}:${GOPATH}/bin:/usr/local/go/bin"
     ```
 
+
+#### Build RPM and DEB files
+
+1. EXXXX
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make build
+    ```
+
+
+------------------------------------------
+
 #### Download dependencies
 
 1. XXX.

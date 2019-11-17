@@ -7,7 +7,8 @@ ENV REFRESHED_AT 2019-11-16
 # Avoid "Error: libselinux conflicts with fakesystemd-1-17.el7.centos.noarch"
 
 RUN yum -y swap fakesystemd systemd \
- && yum -y install systemd-devel
+ && yum -y install systemd-devel \
+ && yum clean all
 
 RUN yum -y update
 
