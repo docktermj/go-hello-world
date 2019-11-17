@@ -9,6 +9,7 @@ where "M.m.P-I" is Major.minor.Patch-Iteration.
 A simple "hello world" program.
 The purpose of the repository is to show how to:
 
+1. Use go modules
 1. Build go executable locally
 1. Build go executable via Docker
 1. Build RPM / DEB installation via Docker.
@@ -25,7 +26,10 @@ The purpose of the repository is to show how to:
 
 ### Prerequisite software
 
-1. FIXME: See [build dependencies](https://github.com/docktermj/KnowledgeBase/blob/master/build-dependencies/packer.md).
+The following software programs need to be installed:
+
+1. [git](https://github.com/docktermj/KnowledgeBase/blob/master/software/git.md#installation)
+1. [docker](https://github.com/docktermj/KnowledgeBase/blob/master/software/docker.md#installation)
 
 ### Clone repository
 
@@ -38,6 +42,9 @@ The purpose of the repository is to show how to:
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
     ```
 
+1. Follow steps in [clone-repository](https://github.com/docktermj/KnowledgeBase/blob/master/HowTo/clone-repository.md)
+   to install the Git repository.
+
 ### Set environment variables
 
 1. :pencil2: Set Go environment variables.
@@ -46,18 +53,6 @@ The purpose of the repository is to show how to:
     ```console
     export GOPATH="${HOME}/go"
     export PATH="${PATH}:${GOPATH}/bin:/usr/local/go/bin"
-    ```
-
-#### Download project
-
-1. **Option #1:** Download via `git`.
-   Follow steps in [clone-repository](https://github.com/docktermj/KnowledgeBase/blob/master/HowTo/clone-repository.md) to install the Git repository.
-
-1. **Option #2:** Download via `go`.   This is like `git clone https://...`
-   Example:
-
-    ```console
-    go get github.com/${GIT_ACCOUNT}/${GIT_REPOSITORY}
     ```
 
 #### Download dependencies
@@ -151,6 +146,29 @@ Example distributions: openSUSE, Fedora, CentOS, Mandrake
     ```console
     cd ${REPOSITORY_DIR}
     make clean
+    ```
+
+## Test on Ubuntu
+
+1. Determine if `go-hello-world` is installed.
+   Example:
+
+    ```console
+    apt list --installed | grep go-hello-world
+    ```
+
+1. Install `go-hello-world`.
+   Example:
+
+    ```console
+    sudo apt install ./go-hello-world_0.0.0_amd64.deb
+    ```
+
+1. Remove `go-hello-world` from system.
+   Example:
+
+    ```console
+    sudo apt-get remove go-hello-world
     ```
 
 ## References
