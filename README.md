@@ -24,6 +24,9 @@ The purpose of the repository is to show how to:
 
 ## Development
 
+
+## Create package
+
 ### Prerequisite software
 
 The following software programs need to be installed:
@@ -55,16 +58,52 @@ The following software programs need to be installed:
     export PATH="${PATH}:${GOPATH}/bin:/usr/local/go/bin"
     ```
 
+### Build RPM and DEB files
 
-#### Build RPM and DEB files
-
-1. EXXXX
+1. Use make target to run a docker images that builds RPM and DEB files.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
     make build
     ```
+
+## Test DEB package on Ubuntu
+
+1. Determine if `go-hello-world` is installed.
+   Example:
+
+    ```console
+    apt list --installed | grep go-hello-world
+    ```
+
+1. Install `go-hello-world`.
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}/target
+    sudo apt install ./go-hello-world_0.0.0_amd64.deb
+    ```
+
+1. Run command.
+   Example:
+
+    ```console
+    go-hello-world
+    ```
+
+1. Remove `go-hello-world` from system.
+   Example:
+
+    ```console
+    sudo apt-get remove go-hello-world
+    ```
+
+## Test RPM package on Centos
+
+
+
+
 
 
 ------------------------------------------
@@ -162,28 +201,7 @@ Example distributions: openSUSE, Fedora, CentOS, Mandrake
     make clean
     ```
 
-## Test on Ubuntu
 
-1. Determine if `go-hello-world` is installed.
-   Example:
-
-    ```console
-    apt list --installed | grep go-hello-world
-    ```
-
-1. Install `go-hello-world`.
-   Example:
-
-    ```console
-    sudo apt install ./go-hello-world_0.0.0_amd64.deb
-    ```
-
-1. Remove `go-hello-world` from system.
-   Example:
-
-    ```console
-    sudo apt-get remove go-hello-world
-    ```
 
 ## References
 
