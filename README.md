@@ -80,6 +80,16 @@ The following software programs need to be installed:
 
    The results will be in the `${GOPATH}/bin` directory.
 
+### Run
+
+1. Run.
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    go run main.go
+    ```
+
 ### Test
 
 1. Test
@@ -88,6 +98,13 @@ The following software programs need to be installed:
     ```console
     cd ${GIT_REPOSITORY_DIR}
     make local-test
+    ```
+
+    or
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    go test
     ```
 
 ### Cleanup
