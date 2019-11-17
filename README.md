@@ -77,7 +77,7 @@ The following software programs need to be installed:
     apt list --installed | grep go-hello-world
     ```
 
-1. Install `go-hello-world`.
+1. :pencil: Install `go-hello-world`.
    Example:
 
     ```console
