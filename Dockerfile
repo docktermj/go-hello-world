@@ -1,4 +1,4 @@
-FROM centos:7.1.1503
+FROM centos:7.7.1908
 
 ENV REFRESHED_AT 2019-11-16
 
