@@ -1,2 +1,4 @@
 github.com/docktermj/go-hello-world-module v0.0.4 h1:iwss730TtYPpikgFgLI7Jfc0L+vuBebEXWD8jfkdDy8=
 github.com/docktermj/go-hello-world-module v0.0.4/go.mod h1:oKfLffYK/tRUlExD+e1kJJKgLtJJ+eSAc++MtZKt4fU=
+github.com/jstemmer/go-junit-report v0.9.1 h1:6QPYqodiu3GuPL+7mfx+NwDdp2eTkp9IfEUpgAwUN0o=
+github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/XSXhF0NWZEnDohbsk=
