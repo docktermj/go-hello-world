@@ -65,7 +65,7 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make dependencies
+    make local-dependencies
     ```
 
 ### Build
@@ -75,7 +75,7 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make build-local
+    make local-build
     ```
 
    The results will be in the `${GOPATH}/bin` directory.
@@ -87,7 +87,7 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make test-local
+    make local-test
     ```
 
 ### Cleanup
@@ -179,5 +179,5 @@ The following software programs need to be installed:
 ## References
 
 1. [Using Go Modules](https://blog.golang.org/using-go-modules)
-1. [Simple Go project layout with modules ](https://eli.thegreenplace.net/2019/simple-go-project-layout-with-modules/)
+1. [Simple Go project layout with modules](https://eli.thegreenplace.net/2019/simple-go-project-layout-with-modules/)
 1. [Project layout](https://github.com/golang-standards/project-layout)
