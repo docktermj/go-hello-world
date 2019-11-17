@@ -1,10 +1,6 @@
 FROM centos:7.1.1503
 
-ENV REFRESHED_AT 2017-11-16
-
-ARG PROGRAM_NAME="unknown"
-ARG BUILD_VERSION=0.0.0
-ARG BUILD_ITERATION=0
+ENV REFRESHED_AT 2019-11-16
 
 # --- Install system packages -------------------------------------------------
 
@@ -37,8 +33,6 @@ RUN gem install --no-ri --no-rdoc fpm
 
 ENV GO_VERSION=1.13.4
 
-# Install "go".
-
 RUN wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
  && tar -C /usr/local/ -xzf go${GO_VERSION}.linux-amd64.tar.gz
 
@@ -53,9 +47,15 @@ ENV GO_PACKAGE="github.com/docktermj/${PROGRAM_NAME}"
 
 COPY . ${GOPATH}/src/${GO_PACKAGE}
 
-# Build go program.
+# Build environment.
 
+ARG PROGRAM_NAME="unknown"
+ARG BUILD_VERSION=0.0.0
+ARG BUILD_ITERATION=0
+ARG HELLO_NAME="Bob"
 WORKDIR ${GOPATH}/src/${GO_PACKAGE}
+
+# Build go program.
 
 RUN mkdir ~/.ssh \
  && touch ~/.ssh/known_hosts \
@@ -66,7 +66,7 @@ RUN mkdir ~/.ssh \
       "-X main.programName=${PROGRAM_NAME} \
        -X main.buildVersion=${BUILD_VERSION} \
        -X main.buildIteration=${BUILD_ITERATION} \
-       -X github.com/docktermj/go-hello-world-module.helloName=Bob \
+       -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
       " \
     ${GO_PACKAGE}
 

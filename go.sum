@@ -1,8 +1,2 @@
-github.com/docktermj/go-hello-world-module v0.0.0-20191116170723-8b5d057b95da h1:CE2AsYv0TbNvyD+iK2eD/kqwIoeGxbvEX5uOb8NjdHQ=
-github.com/docktermj/go-hello-world-module v0.0.0-20191116170723-8b5d057b95da/go.mod h1:oKfLffYK/tRUlExD+e1kJJKgLtJJ+eSAc++MtZKt4fU=
-github.com/docktermj/go-hello-world-module v0.0.1 h1:xmmnOMsVpA5b1WdM82/4hdHLqiztfZukHnsktOQIApM=
-github.com/docktermj/go-hello-world-module v0.0.1/go.mod h1:oKfLffYK/tRUlExD+e1kJJKgLtJJ+eSAc++MtZKt4fU=
-github.com/docktermj/go-hello-world-module v0.0.2 h1:KYYMu0pFZEpmGgTXLPXRdUiJ0KUbuTA2wclVp5LaSj8=
-github.com/docktermj/go-hello-world-module v0.0.2/go.mod h1:oKfLffYK/tRUlExD+e1kJJKgLtJJ+eSAc++MtZKt4fU=
-github.com/docktermj/go-hello-world-module v0.0.3 h1:r2UtMOgyiAkf8lKdCSeCopPnj8nCzFv3kacePiQ+yjE=
-github.com/docktermj/go-hello-world-module v0.0.3/go.mod h1:oKfLffYK/tRUlExD+e1kJJKgLtJJ+eSAc++MtZKt4fU=
+github.com/docktermj/go-hello-world-module v0.0.4 h1:iwss730TtYPpikgFgLI7Jfc0L+vuBebEXWD8jfkdDy8=
+github.com/docktermj/go-hello-world-module v0.0.4/go.mod h1:oKfLffYK/tRUlExD+e1kJJKgLtJJ+eSAc++MtZKt4fU=
