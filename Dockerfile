@@ -38,6 +38,11 @@ RUN wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
 
 # --- Compile go program ------------------------------------------------------
 
+ARG PROGRAM_NAME="unknown"
+ARG BUILD_VERSION=0.0.0
+ARG BUILD_ITERATION=0
+ARG HELLO_NAME="Bob"
+
 ENV HOME="/root"
 ENV GOPATH="${HOME}/gocode"
 ENV PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
@@ -47,15 +52,9 @@ ENV GO_PACKAGE="github.com/docktermj/${PROGRAM_NAME}"
 
 COPY . ${GOPATH}/src/${GO_PACKAGE}
 
-# Build environment.
-
-ARG PROGRAM_NAME="unknown"
-ARG BUILD_VERSION=0.0.0
-ARG BUILD_ITERATION=0
-ARG HELLO_NAME="Bob"
-WORKDIR ${GOPATH}/src/${GO_PACKAGE}
-
 # Build go program.
+
+WORKDIR ${GOPATH}/src/${GO_PACKAGE}
 
 RUN mkdir ~/.ssh \
  && touch ~/.ssh/known_hosts \
