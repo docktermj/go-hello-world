@@ -22,10 +22,7 @@ The purpose of the repository is to show how to:
     go-hello-world
     ```
 
-## Development
-
-
-## Create package
+## Prerequisites
 
 ### Prerequisite software
 
@@ -33,6 +30,7 @@ The following software programs need to be installed:
 
 1. [git](https://github.com/docktermj/KnowledgeBase/blob/master/software/git.md#installation)
 1. [docker](https://github.com/docktermj/KnowledgeBase/blob/master/software/docker.md#installation)
+1. [go](https://github.com/docktermj/KnowledgeBase/blob/master/software/go.md#installation)
 
 ### Clone repository
 
@@ -58,6 +56,54 @@ The following software programs need to be installed:
     export PATH="${PATH}:${GOPATH}/bin:/usr/local/go/bin"
     ```
 
+## Development
+
+### Download dependencies
+
+1. Dependencies.
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make dependencies
+    ```
+
+### Build
+
+1. XXX
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make build-local
+    ```
+
+   The results will be in the `${GOPATH}/bin` directory.
+
+### Test
+
+1. XXX
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make test-local
+    ```
+
+### Cleanup
+
+1. XXX
+   Example:
+
+    ```console
+    cd ${REPOSITORY_DIR}
+    make clean
+    ```
+
+## Create package
+
+
+
 ### Build RPM and DEB files
 
 1. Use make target to run a docker images that builds RPM and DEB files.
@@ -67,6 +113,8 @@ The following software programs need to be installed:
     cd ${GIT_REPOSITORY_DIR}
     make build
     ```
+
+   The results will be in the `.../target` directory.
 
 ## Test DEB package on Ubuntu
 
@@ -101,107 +149,34 @@ The following software programs need to be installed:
 
 ## Test RPM package on Centos
 
-
-
-
-
-
-------------------------------------------
-
-#### Download dependencies
-
-1. XXX.
+1. Determine if `go-hello-world` is installed.
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make dependencies
+    yum list installed | grep go-hello-world
     ```
 
-### Build
-
-#### Local build
-
-1. XXX
+1. :pencil: Install `go-hello-world`.
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make build-local
+    cd ${GIT_REPOSITORY_DIR}/target
+    sudo yum install ./go-hello-world_0.0.0_amd64.rpm
     ```
 
-   The results will be in the `${GOPATH}/bin` directory.
-
-#### Docker build
-
-1. XXX
+1. Run command.
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make build
+    go-hello-world
     ```
 
-   The results will be in the `.../target` directory.
-
-### Test
-
-1. XXX
+1. Remove `go-hello-world` from system.
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make test-local
+    sudo yum remove go-hello-world
     ```
-
-### Install
-
-#### RPM-based
-
-Example distributions: openSUSE, Fedora, CentOS, Mandrake
-
-##### RPM Install
-
-1. XXX
-   Example:
-
-    ```console
-    sudo rpm -ivh go-hello-world-M.m.P-I.x86_64.rpm
-    ```
-
-##### RPM Update
-
-1. XXX
-   Example:
-
-    ```console
-    sudo rpm -Uvh go-hello-world-M.m.P-I.x86_64.rpm
-    ```
-
-#### Debian
-
-1. Example distributions: Ubuntu
-
-##### Debian Install / Update
-
-1. XXX
-   Example:
-
-    ```console
-    sudo dpkg -i go-hello-world_M.m.P-I_amd64.deb
-    ```
-
-### Cleanup
-
-1. XXX
-   Example:
-
-    ```console
-    cd ${REPOSITORY_DIR}
-    make clean
-    ```
-
-
 
 ## References
 
