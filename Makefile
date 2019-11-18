@@ -8,7 +8,6 @@ DOCKER_IMAGE_NAME := local/$(PROGRAM_NAME)
 BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty)
 BUILD_TAG := $(shell git describe --always --tags --abbrev=0)
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l)
-
 GIT_REMOTE_URL := $(shell git config --get remote.origin.url)
 GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|github.com/|' -e 's|\.git$$||')
 
@@ -18,7 +17,7 @@ GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|g
 default: help
 
 # -----------------------------------------------------------------------------
-# Local development
+# Build
 # -----------------------------------------------------------------------------
 
 .PHONY: dependencies
@@ -27,12 +26,12 @@ dependencies:
 	@go get -u github.com/jstemmer/go-junit-report
 
 
-.PHONY: local-build
-local-build: local-build-linux local-build-macos local-build-windows
+.PHONY: build
+build: build-linux build-macos build-windows
 
 
-.PHONY: local-build-linux
-local-build-linux:
+.PHONY: build-linux
+build-linux:
 	@go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
@@ -45,8 +44,8 @@ local-build-linux:
 	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/linux
 
 
-.PHONY: local-build-macos
-local-build-macos:
+.PHONY: build-macos
+build-macos:
 	@GOOS=darwin GOARCH=amd64 go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
@@ -59,8 +58,8 @@ local-build-macos:
 	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/darwin
 
 
-.PHONY: local-build-windows
-local-build-windows:
+.PHONY: build-windows
+build-windows:
 	@GOOS=windows GOARCH=amd64 go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
@@ -72,13 +71,16 @@ local-build-windows:
 	@mkdir -p $(TARGET_DIRECTORY)/windows || true
 	@mv $(PROGRAM_NAME).exe $(TARGET_DIRECTORY)/windows
 
+# -----------------------------------------------------------------------------
+# Test
+# -----------------------------------------------------------------------------
 
-.PHONY: local-test
-local-test:
+.PHONY: test
+test:
 	go test $(GO_PACKAGE_NAME)/...
 
 # -----------------------------------------------------------------------------
-# Docker-based development
+# Package
 # -----------------------------------------------------------------------------
 
 .PHONY: package

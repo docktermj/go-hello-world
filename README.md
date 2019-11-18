@@ -19,7 +19,7 @@ where "M.m.P-I" is Major.minor.Patch-Iteration.
     1. [Test](#test)
     1. [Cleanup](#cleanup)
 1. [Package](#package)
-    1. [Build RPM and DEB files](#build-rpm-and-deb-files)
+    1. [Package RPM and DEB files](#package-rpm-and-deb-files)
     1. [Test DEB package on Ubuntu](#test-deb-package-on-ubuntu)
     1. [Test RPM package on Centos](#test-rpm-package-on-centos)
 1. [References](#references)
@@ -147,14 +147,14 @@ The following software programs need to be installed:
 
 ## Package
 
-### Build RPM and DEB files
+### Package RPM and DEB files
 
 1. Use make target to run a docker images that builds RPM and DEB files.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make build
+    make package
     ```
 
    The results will be in the `${GIT_REPOSITORY_DIR}/target/linux` directory.
