@@ -157,7 +157,7 @@ The following software programs need to be installed:
     make package
     ```
 
-   The results will be in the `${GIT_REPOSITORY_DIR}/target/linux` directory.
+   The results will be in the `${GIT_REPOSITORY_DIR}/target` directory.
 
 ### Test DEB package on Ubuntu
 
