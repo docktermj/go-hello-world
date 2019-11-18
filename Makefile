@@ -77,7 +77,7 @@ build-windows:
 
 .PHONY: test
 test:
-	go test $(GO_PACKAGE_NAME)/...
+	@go test $(GO_PACKAGE_NAME)/...
 
 # -----------------------------------------------------------------------------
 # Package
@@ -85,15 +85,15 @@ test:
 
 .PHONY: package
 package: docker-package
-	mkdir -p $(TARGET_DIRECTORY) || true
-	CONTAINER_ID=$$(docker create $(DOCKER_IMAGE_NAME)); \
-	docker cp $$CONTAINER_ID:/output/. $(TARGET_DIRECTORY)/; \
-	docker rm -v $$CONTAINER_ID
+	@mkdir -p $(TARGET_DIRECTORY) || true
+	@CONTAINER_ID=$$(docker create $(DOCKER_IMAGE_NAME)); \
+	@docker cp $$CONTAINER_ID:/output/. $(TARGET_DIRECTORY)/; \
+	@docker rm -v $$CONTAINER_ID
 
 
 .PHONY: docker-package
 docker-package:
-	docker build \
+	@docker build \
 		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \
 		--build-arg BUILD_VERSION=$(BUILD_VERSION) \
 		--build-arg BUILD_ITERATION=$(BUILD_ITERATION) \
@@ -107,7 +107,7 @@ docker-package:
 
 .PHONY: docker-run
 docker-run:
-	docker run \
+	@docker run \
 	    --interactive \
 	    --tty \
 	    --name $(DOCKER_CONTAINER_NAME) \
@@ -116,9 +116,9 @@ docker-run:
 
 .PHONY: clean
 clean:
-	docker rm --force $(DOCKER_CONTAINER_NAME) || true
-	rm -rf $(TARGET_DIRECTORY)
-	rm $(GOPATH)/bin/$(PROGRAM_NAME) || true
+	@docker rm --force $(DOCKER_CONTAINER_NAME) || true
+	@rm -rf $(TARGET_DIRECTORY)
+	@rm $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
 .PHONY: print-make-variables
