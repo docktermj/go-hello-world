@@ -23,18 +23,17 @@ default: help
 
 .PHONY: dependencies
 dependencies:
-	go get ./...
-	go get -u github.com/jstemmer/go-junit-report
+	@go get ./...
+	@go get -u github.com/jstemmer/go-junit-report
 
 
 .PHONY: local-build
 local-build: local-build-linux local-build-macos local-build-windows
-	@echo "Done"
 
 
 .PHONY: local-build-linux
 local-build-linux:
-	go install \
+	@go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
 	     -X main.buildVersion=${BUILD_VERSION} \
@@ -42,11 +41,13 @@ local-build-linux:
 	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
 	    " \
 	  ${GO_PACKAGE}
+	@mkdir -p $(TARGET_DIRECTORY)/linux || true
+	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/linux
 
 
 .PHONY: local-build-macos
 local-build-macos:
-	GOOS=darwin GOARCH=amd64 go build \
+	@GOOS=darwin GOARCH=amd64 go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
 	     -X main.buildVersion=${BUILD_VERSION} \
@@ -54,11 +55,13 @@ local-build-macos:
 	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
 	    " \
 	  $(GO_PACKAGE_NAME)
+	@mkdir -p $(TARGET_DIRECTORY)/darwin || true
+	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/darwin
 
 
 .PHONY: local-build-windows
 local-build-windows:
-	GOOS=windows GOARCH=amd64 go build \
+	@GOOS=windows GOARCH=amd64 go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
 	     -X main.buildVersion=${BUILD_VERSION} \
@@ -66,6 +69,8 @@ local-build-windows:
 	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
 	    " \
 	  $(GO_PACKAGE_NAME)
+	@mkdir -p $(TARGET_DIRECTORY)/windows || true
+	@mv $(PROGRAM_NAME).exe $(TARGET_DIRECTORY)/windows
 
 
 .PHONY: local-test
