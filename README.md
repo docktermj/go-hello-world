@@ -4,6 +4,26 @@ Build `go-hello-world-M.m.P-I.x86_64.rpm`
 and   `go-hello-world_M.m.P-I_amd64.deb`
 where "M.m.P-I" is Major.minor.Patch-Iteration.
 
+## Contents
+
+1. [Usage](#usage)
+    1. [Invocation](#invocation)
+1. [Prerequisites](#prerequisites)
+    1. [Prerequisite software](#prerequisite-software)
+    1. [Clone repository](#clone-repository)
+    1. [Set environment variables](#set-environment-variables)
+1. [Development](#development)
+    1. [Download dependencies](#download-dependencies)
+    1. [Build](#build)
+    1. [Run](#run)
+    1. [Test](#test)
+    1. [Cleanup](#cleanup)
+1. [Package](#package)
+    1. [Package RPM and DEB files](#package-rpm-and-deb-files)
+    1. [Test DEB package on Ubuntu](#test-deb-package-on-ubuntu)
+    1. [Test RPM package on Centos](#test-rpm-package-on-centos)
+1. [References](#references)
+
 ## Usage
 
 A simple "hello world" program.
@@ -16,7 +36,8 @@ The purpose of the repository is to show how to:
 
 ### Invocation
 
-1. Run on commandline. Example:
+1. Run on commandline.
+   Example:
 
     ```console
     go-hello-world
@@ -65,7 +86,7 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make local-dependencies
+    make dependencies
     ```
 
 ### Build
@@ -75,10 +96,11 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make local-build
+    make build
     ```
 
-   The results will be in the `${GOPATH}/bin` directory.
+   The results will be in the `${GIT_REPOSITORY_DIR}/target` directory.
+   There will be binaries for the linux, macOS (darwin), and windows platforms.
 
 ### Run
 
@@ -86,7 +108,7 @@ The following software programs need to be installed:
    Example:
 
     ```console
-    go-hello-world
+    ${GIT_REPOSITORY_DIR}/target/linux/go-hello-world
     ```
 
     or
@@ -103,7 +125,7 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make local-test
+    make test
     ```
 
     or
@@ -123,21 +145,21 @@ The following software programs need to be installed:
     make clean
     ```
 
-## Create package
+## Package
 
-### Build RPM and DEB files
+### Package RPM and DEB files
 
 1. Use make target to run a docker images that builds RPM and DEB files.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make build
+    make package
     ```
 
-   The results will be in the `.../target` directory.
+   The results will be in the `${GIT_REPOSITORY_DIR}/target` directory.
 
-## Test DEB package on Ubuntu
+### Test DEB package on Ubuntu
 
 1. Determine if `go-hello-world` is installed.
    Example:
@@ -168,7 +190,7 @@ The following software programs need to be installed:
     sudo apt-get remove go-hello-world
     ```
 
-## Test RPM package on Centos
+### Test RPM package on Centos
 
 1. Determine if `go-hello-world` is installed.
    Example:
