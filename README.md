@@ -96,7 +96,7 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make local-build
+    make build
     ```
 
    The results will be in the `${GIT_REPOSITORY_DIR}/target` directory.
@@ -125,7 +125,7 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make local-test
+    make test
     ```
 
     or
