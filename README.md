@@ -86,7 +86,7 @@ The following software programs need to be installed:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make local-dependencies
+    make dependencies
     ```
 
 ### Build
@@ -99,7 +99,8 @@ The following software programs need to be installed:
     make local-build
     ```
 
-   The results will be in the `${GOPATH}/bin` directory.
+   The results will be in the `${GIT_REPOSITORY_DIR}/target` directory.
+   There will be binaries for the linux, macOS (darwin), and windows platforms.
 
 ### Run
 
@@ -107,7 +108,7 @@ The following software programs need to be installed:
    Example:
 
     ```console
-    go-hello-world
+    ${GIT_REPOSITORY_DIR}/target/linux/go-hello-world
     ```
 
     or
@@ -156,7 +157,7 @@ The following software programs need to be installed:
     make build
     ```
 
-   The results will be in the `.../target` directory.
+   The results will be in the `${GIT_REPOSITORY_DIR}/target/linux` directory.
 
 ### Test DEB package on Ubuntu
 

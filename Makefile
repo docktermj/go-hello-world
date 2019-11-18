@@ -81,16 +81,16 @@ local-test:
 # Docker-based development
 # -----------------------------------------------------------------------------
 
-.PHONY: build
-build: docker-build
+.PHONY: package
+package: docker-package
 	mkdir -p $(TARGET_DIRECTORY) || true
 	CONTAINER_ID=$$(docker create $(DOCKER_IMAGE_NAME)); \
 	docker cp $$CONTAINER_ID:/output/. $(TARGET_DIRECTORY)/; \
 	docker rm -v $$CONTAINER_ID
 
 
-.PHONY: docker-build
-docker-build:
+.PHONY: docker-package
+docker-package:
 	docker build \
 		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \
 		--build-arg BUILD_VERSION=$(BUILD_VERSION) \
