@@ -68,12 +68,8 @@ RUN make dependencies \
 
 # Copy binaries to output.
 
-RUN mkdir -p /output/linux \
- && mkdir /output/darwin \
- && mkdir /output/windows \
- && cp /root/go/bin/${PROGRAM_NAME} /output/linux \
- && cp ${GOPATH}/src/${GO_PACKAGE_NAME}/${PROGRAM_NAME} /output/darwin \
- && cp ${GOPATH}/src/${GO_PACKAGE_NAME}/${PROGRAM_NAME}.exe /output/windows
+RUN mkdir -p /output \
+ && cp -R ${GOPATH}/src/${GO_PACKAGE_NAME}/target/*  /output/
 
 # --- Test go program ---------------------------------------------------------
 
