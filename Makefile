@@ -9,6 +9,9 @@ BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty)
 BUILD_TAG := $(shell git describe --always --tags --abbrev=0)
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l)
 
+GIT_REMOTE_URL := $(shell git config --get remote.origin.url)
+GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|github.com/|' -e 's|\.git$$||')
+
 # The first "make" target runs as default.
 
 .PHONY: default
@@ -18,20 +21,56 @@ default: help
 # Local development
 # -----------------------------------------------------------------------------
 
-.PHONY: local-dependencies
-local-dependencies:
+.PHONY: dependencies
+dependencies:
 	go get ./...
 	go get -u github.com/jstemmer/go-junit-report
-	
-	
+
+
 .PHONY: local-build
-local-build:
-	go install github.com/docktermj/$(PROGRAM_NAME)
+local-build: local-build-linux local-build-macos local-build-windows
+	@echo "Done"
+
+
+.PHONY: local-build-linux
+local-build-linux:
+	go install \
+	  -ldflags \
+	    "-X main.programName=${PROGRAM_NAME} \
+	     -X main.buildVersion=${BUILD_VERSION} \
+	     -X main.buildIteration=${BUILD_ITERATION} \
+	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+	    " \
+	  ${GO_PACKAGE}
+
+
+.PHONY: local-build-macos
+local-build-macos:
+	GOOS=darwin GOARCH=amd64 go build \
+	  -ldflags \
+	    "-X main.programName=${PROGRAM_NAME} \
+	     -X main.buildVersion=${BUILD_VERSION} \
+	     -X main.buildIteration=${BUILD_ITERATION} \
+	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+	    " \
+	  $(GO_PACKAGE_NAME)
+
+
+.PHONY: local-build-windows
+local-build-windows:
+	GOOS=windows GOARCH=amd64 go build \
+	  -ldflags \
+	    "-X main.programName=${PROGRAM_NAME} \
+	     -X main.buildVersion=${BUILD_VERSION} \
+	     -X main.buildIteration=${BUILD_ITERATION} \
+	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+	    " \
+	  $(GO_PACKAGE_NAME)
 
 
 .PHONY: local-test
 local-test:
-	go test github.com/docktermj/$(PROGRAM_NAME)/... 
+	go test $(GO_PACKAGE_NAME)/...
 
 # -----------------------------------------------------------------------------
 # Docker-based development
@@ -44,12 +83,14 @@ build: docker-build
 	docker cp $$CONTAINER_ID:/output/. $(TARGET_DIRECTORY)/; \
 	docker rm -v $$CONTAINER_ID
 
+
 .PHONY: docker-build
 docker-build:
 	docker build \
 		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \
 		--build-arg BUILD_VERSION=$(BUILD_VERSION) \
 		--build-arg BUILD_ITERATION=$(BUILD_ITERATION) \
+		--build-arg GO_PACKAGE_NAME=$(GO_PACKAGE_NAME) \
 		--tag $(DOCKER_IMAGE_NAME) \
 		.
 
@@ -73,6 +114,13 @@ clean:
 	rm $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
+.PHONY: print-make-variables
+print-make-variables:
+	@$(foreach V,$(sort $(.VARIABLES)), \
+	   $(if $(filter-out environment% default automatic, \
+	   $(origin $V)),$(warning $V=$($V) ($(value $V)))))
+
+	   
 .PHONY: help
 help:
 	@echo "Build $(PROGRAM_NAME) version $(BUILD_VERSION)-$(BUILD_ITERATION)".

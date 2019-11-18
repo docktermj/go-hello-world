@@ -42,38 +42,38 @@ RUN wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
 ARG PROGRAM_NAME="unknown"
 ARG BUILD_VERSION=0.0.0
 ARG BUILD_ITERATION=0
-ARG HELLO_NAME="Bob"
+ARG HELLO_NAME="world"
+ARG GO_PACKAGE_NAME="unknown"
 
 ENV HOME="/root"
 ENV GOPATH="${HOME}/go"
 ENV PATH="${PATH}:/usr/local/go/bin:${GOPATH}/bin"
-ENV GO_PACKAGE="github.com/docktermj/${PROGRAM_NAME}"
 
 # Copy local files from the Git repository.
 
-COPY . ${GOPATH}/src/${GO_PACKAGE}
+COPY . ${GOPATH}/src/${GO_PACKAGE_NAME}
 
 # Build go program.
 
-WORKDIR ${GOPATH}/src/${GO_PACKAGE}
+WORKDIR ${GOPATH}/src/${GO_PACKAGE_NAME}
 
 RUN mkdir ~/.ssh \
  && touch ~/.ssh/known_hosts \
- && ssh-keyscan github.com >> ~/.ssh/known_hosts \
- && go get -u ./... \
- && go install \
-    -ldflags  \
-      "-X main.programName=${PROGRAM_NAME} \
-       -X main.buildVersion=${BUILD_VERSION} \
-       -X main.buildIteration=${BUILD_ITERATION} \
-       -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
-      " \
-    ${GO_PACKAGE}
+ && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-# Copy binary to output.
+# Create Linux binary.
 
-RUN mkdir -p /output/bin \
- && cp /root/go/bin/${PROGRAM_NAME} /output/bin
+RUN make dependencies \
+ && make local-build
+
+# Copy binaries to output.
+
+RUN mkdir -p /output/linux \
+ && mkdir /output/darwin \
+ && mkdir /output/windows \
+ && cp /root/go/bin/${PROGRAM_NAME} /output/linux \
+ && cp ${GOPATH}/src/${GO_PACKAGE_NAME}/${PROGRAM_NAME} /output/darwin \
+ && cp ${GOPATH}/src/${GO_PACKAGE_NAME}/${PROGRAM_NAME}.exe /output/windows
 
 # --- Test go program ---------------------------------------------------------
 
@@ -81,7 +81,7 @@ RUN mkdir -p /output/bin \
 
 # RUN go get github.com/jstemmer/go-junit-report \
 #  && mkdir -p /output/go-junit-report \
-#  && go test -v ${GO_PACKAGE}/... | go-junit-report > /output/go-junit-report/test-report.xml
+#  && go test -v ${GO_PACKAGE_NAME}/... | go-junit-report > /output/go-junit-report/test-report.xml
 
 # --- Package as RPM and DEB --------------------------------------------------
 
@@ -93,6 +93,7 @@ RUN fpm \
   --input-type dir \
   --output-type rpm \
   --name ${PROGRAM_NAME} \
+  --package /output/linux \
   --version ${BUILD_VERSION} \
   --iteration ${BUILD_ITERATION} \
   /root/go/bin/=/usr/bin
@@ -103,6 +104,7 @@ RUN fpm \
   --input-type dir \
   --output-type deb \
   --name ${PROGRAM_NAME} \
+  --package /output/linux \
   --version ${BUILD_VERSION} \
   --iteration ${BUILD_ITERATION} \
   /root/go/bin/=/usr/bin
