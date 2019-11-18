@@ -117,8 +117,8 @@ docker-run:
 .PHONY: clean
 clean:
 	@docker rm --force $(DOCKER_CONTAINER_NAME) || true
-	@rm -rf $(TARGET_DIRECTORY)
-	@rm $(GOPATH)/bin/$(PROGRAM_NAME) || true
+	@rm -rf $(TARGET_DIRECTORY) || true
+	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
 .PHONY: print-make-variables
