@@ -36,7 +36,8 @@ The purpose of the repository is to show how to:
 
 ### Invocation
 
-1. Run on commandline. Example:
+1. Run on commandline.
+   Example:
 
     ```console
     go-hello-world
