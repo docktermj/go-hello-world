@@ -64,7 +64,7 @@ RUN mkdir ~/.ssh \
 # Create Linux binary.
 
 RUN make dependencies \
- && make local-build
+ && make build
 
 # Copy binaries to output.
 
