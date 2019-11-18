@@ -85,8 +85,6 @@ RUN mkdir -p /output/linux \
 
 # --- Package as RPM and DEB --------------------------------------------------
 
-WORKDIR /output
-
 # RPM package.
 
 RUN fpm \
