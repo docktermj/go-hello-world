@@ -1,6 +1,6 @@
-FROM centos:7.7.1908
+FROM centos:7.9.2009
 
-ENV REFRESHED_AT 2019-11-16
+ENV REFRESHED_AT 2021-09-18
 
 # --- Install system packages -------------------------------------------------
 
@@ -32,7 +32,7 @@ RUN gem install --no-ri --no-rdoc fpm
 
 # --- Install Go --------------------------------------------------------------
 
-ENV GO_VERSION=1.13.4
+ENV GO_VERSION=1.17.1
 
 RUN wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
  && tar -C /usr/local/ -xzf go${GO_VERSION}.linux-amd64.tar.gz
