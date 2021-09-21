@@ -22,7 +22,7 @@ default: help
 
 .PHONY: dependencies
 dependencies:
-	@go get ./...
+#	@go get ./...
 	@go get -u github.com/jstemmer/go-junit-report
 
 
@@ -127,7 +127,7 @@ print-make-variables:
 	   $(if $(filter-out environment% default automatic, \
 	   $(origin $V)),$(warning $V=$($V) ($(value $V)))))
 
-	   
+
 .PHONY: help
 help:
 	@echo "Build $(PROGRAM_NAME) version $(BUILD_VERSION)-$(BUILD_ITERATION)".
