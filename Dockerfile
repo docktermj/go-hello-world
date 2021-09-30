@@ -65,11 +65,16 @@ RUN apk add --no-cache \
       make \
       libc-dev \
       rpm \
- && gem install --no-document fpm
+ && gem install \
+      --no-document \
+      --version 1.13.1 \
+      fpm
+
+ RUN fpm --version
 
 # Copy files from prior step.
 
-COPY --from=go_builder "/output/* "/output"
+COPY --from=go_builder "/output/*" "/output/"
 
 # Create RPM package.
 
@@ -106,6 +111,6 @@ LABEL Name="docktermj/hello-world" \
 
 # Copy files from prior step.
 
-COPY --from=fpm_builder "/output/*" "/output"
+COPY --from=fpm_builder "/output/*" "/output/"
 
 CMD ["/bin/bash"]

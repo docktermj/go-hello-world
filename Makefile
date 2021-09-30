@@ -22,8 +22,7 @@ default: help
 
 .PHONY: dependencies
 dependencies:
-#	@go get ./...
-	@go get -u github.com/jstemmer/go-junit-report
+	@go mod tidy
 
 
 .PHONY: build
