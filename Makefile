@@ -93,6 +93,7 @@ package: docker-package
 .PHONY: docker-package
 docker-package:
 	@docker build \
+		--no-cache \
 		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \
 		--build-arg BUILD_VERSION=$(BUILD_VERSION) \
 		--build-arg BUILD_ITERATION=$(BUILD_ITERATION) \
