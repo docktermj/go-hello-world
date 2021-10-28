@@ -14,7 +14,7 @@ FROM ${IMAGE_GO_BUILDER} as go_builder
 ENV REFRESHED_AT 2021-10-27
 LABEL Name="dockter/hello-world-go-builder" \
       Maintainer="nemo@dockter.com" \
-      Version="1.0.0"
+      Version="0.0.5"
 
 # Build arguments.
 
@@ -56,7 +56,7 @@ FROM ${IMAGE_FPM_BUILDER} as fpm_builder
 ENV REFRESHED_AT 2021-10-27
 LABEL Name="dockter/hello-world-fpm-builder" \
       Maintainer="nemo@dockter.com" \
-      Version="1.0.0"
+      Version="0.0.5"
 
 # Use arguments from prior stage.
 
@@ -104,7 +104,7 @@ FROM ${IMAGE_FINAL} as final
 ENV REFRESHED_AT 2021-10-27
 LABEL Name="dockter/hello-world" \
       Maintainer="nemo@dockter.com" \
-      Version="1.0.0"
+      Version="0.0.5"
 
 # Copy files from prior step.
 
