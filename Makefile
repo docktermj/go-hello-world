@@ -124,6 +124,7 @@ docker-build:
 		--tag $(DOCKER_IMAGE_NAME):$(BUILD_VERSION) \
 		.
 
+
 .PHONY: docker-build-package
 docker-build-package:
 	@docker build \
@@ -163,6 +164,7 @@ docker-run:
 .PHONY: clean
 clean:
 	@docker rm --force $(DOCKER_CONTAINER_NAME) || true
+	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) || true	
 	@rm -rf $(TARGET_DIRECTORY) || true
 	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
