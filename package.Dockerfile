@@ -108,6 +108,10 @@ LABEL Name="dockter/hello-world" \
 
 # Copy files from prior step.
 
-COPY --from=fpm_builder "/output/*" "/output/"
+COPY --from=fpm_builder "/output/darwin/go-hello-world"      "/output/darwin/go-hello-world"
+COPY --from=fpm_builder "/output/linux/go-hello-world"       "/output/linux/go-hello-world"
+COPY --from=fpm_builder "/output/scratch/go-hello-world"     "/output/scratch/go-hello-world"
+COPY --from=fpm_builder "/output/windows/go-hello-world.exe" "/output/windows/go-hello-world.exe"
+COPY --from=fpm_builder "/output/go-hello-world-*" "/output/"
 
 CMD ["/bin/bash"]
