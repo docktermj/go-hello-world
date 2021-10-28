@@ -12,3 +12,6 @@
 *.out
 
 target/
+.history
+.vscode
+__debug_bin
