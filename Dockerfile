@@ -45,15 +45,12 @@ RUN make build-scratch
 RUN mkdir -p /output \
  && cp -R ${GOPATH}/src/${GO_PACKAGE_NAME}/target/*  /output/
 
-RUN cd /output \
- && ls -laR
-
 # -----------------------------------------------------------------------------
 # Stage: final
 # -----------------------------------------------------------------------------
 
 FROM ${IMAGE_FINAL} as final
-ENV REFRESHED_AT 2021-10-227
+ENV REFRESHED_AT 2021-10-27
 LABEL Name="dockter/hello-world" \
       Maintainer="nemo@dockter.com" \
       Version="1.0.0"
