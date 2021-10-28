@@ -44,7 +44,7 @@ build-linux:
 	    " \
 	  -o $(GO_PACKAGE_NAME)
 	@mkdir -p $(TARGET_DIRECTORY)/linux || true
-	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/linux
+	@mv $(GO_PACKAGE_NAME) $(TARGET_DIRECTORY)/linux
 
 
 .PHONY: build-macos
@@ -95,7 +95,7 @@ build-windows:
 	     -X main.buildIteration=${BUILD_ITERATION} \
 	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
 	    " \
-	  -o $(GO_PACKAGE_NAME)
+	  -o $(GO_PACKAGE_NAME).exe
 	@mkdir -p $(TARGET_DIRECTORY)/windows || true
 	@mv $(GO_PACKAGE_NAME).exe $(TARGET_DIRECTORY)/windows
 
@@ -118,7 +118,7 @@ docker-build:
 		--build-arg BUILD_ITERATION=$(BUILD_ITERATION) \
 		--build-arg BUILD_VERSION=$(BUILD_VERSION) \
 		--build-arg GO_PACKAGE_NAME=$(GO_PACKAGE_NAME) \
-		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \	
+		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \
 		--file Dockerfile \
 		--tag $(DOCKER_IMAGE_NAME) \
 		--tag $(DOCKER_IMAGE_NAME):$(BUILD_VERSION) \
