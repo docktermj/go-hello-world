@@ -4,7 +4,8 @@
 PROGRAM_NAME := $(shell basename `git rev-parse --show-toplevel`)
 TARGET_DIRECTORY := ./target
 DOCKER_CONTAINER_NAME := $(PROGRAM_NAME)
-DOCKER_IMAGE_NAME := local/$(PROGRAM_NAME)
+DOCKER_IMAGE_NAME := dockter/$(PROGRAM_NAME)
+DOCKER_BUILD_IMAGE_NAME := $(DOCKER_IMAGE_NAME)-build
 BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty)
 BUILD_TAG := $(shell git describe --always --tags --abbrev=0)
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l)
@@ -18,6 +19,7 @@ default: help
 
 # -----------------------------------------------------------------------------
 # Build
+#  - 'go build' options: https://pkg.go.dev/cmd/go
 # -----------------------------------------------------------------------------
 
 .PHONY: dependencies
@@ -26,49 +28,76 @@ dependencies:
 
 
 .PHONY: build
-build: build-linux build-macos build-windows
+build: dependencies build-linux build-macos build-scratch build-windows
 
 
 .PHONY: build-linux
 build-linux:
-	@go build \
+	@GOOS=linux \
+	GOARCH=amd64 \
+	go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
 	     -X main.buildVersion=${BUILD_VERSION} \
 	     -X main.buildIteration=${BUILD_ITERATION} \
 	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
 	    " \
-	  ${GO_PACKAGE}
+	  -o $(GO_PACKAGE_NAME)
 	@mkdir -p $(TARGET_DIRECTORY)/linux || true
 	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/linux
 
 
 .PHONY: build-macos
 build-macos:
-	@GOOS=darwin GOARCH=amd64 go build \
+	@GOOS=darwin \
+	GOARCH=amd64 \
+	go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
 	     -X main.buildVersion=${BUILD_VERSION} \
 	     -X main.buildIteration=${BUILD_ITERATION} \
 	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
 	    " \
-	  $(GO_PACKAGE_NAME)
+	  -o $(GO_PACKAGE_NAME)
 	@mkdir -p $(TARGET_DIRECTORY)/darwin || true
-	@mv $(PROGRAM_NAME) $(TARGET_DIRECTORY)/darwin
+	@mv $(GO_PACKAGE_NAME) $(TARGET_DIRECTORY)/darwin
+
+
+.PHONY: build-scratch
+build-scratch:
+	@GOOS=linux \
+	GOARCH=amd64 \
+	CGO_ENABLED=0 \
+	go build \
+	  -a \
+      -installsuffix cgo \
+	  -ldflags \
+	    "-s \
+	     -w \
+	     -X main.programName=${PROGRAM_NAME} \
+	     -X main.buildVersion=${BUILD_VERSION} \
+	     -X main.buildIteration=${BUILD_ITERATION} \
+	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+	    " \
+	  -o $(GO_PACKAGE_NAME)
+	@mkdir -p $(TARGET_DIRECTORY)/scratch || true
+	@mv $(GO_PACKAGE_NAME) $(TARGET_DIRECTORY)/scratch	
 
 
 .PHONY: build-windows
 build-windows:
-	@GOOS=windows GOARCH=amd64 go build \
+	@GOOS=windows \
+	GOARCH=amd64 \
+	go build \
 	  -ldflags \
 	    "-X main.programName=${PROGRAM_NAME} \
 	     -X main.buildVersion=${BUILD_VERSION} \
 	     -X main.buildIteration=${BUILD_ITERATION} \
 	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
 	    " \
-	  $(GO_PACKAGE_NAME)
+	  -o $(GO_PACKAGE_NAME)
 	@mkdir -p $(TARGET_DIRECTORY)/windows || true
-	@mv $(PROGRAM_NAME).exe $(TARGET_DIRECTORY)/windows
+	@mv $(GO_PACKAGE_NAME).exe $(TARGET_DIRECTORY)/windows
 
 # -----------------------------------------------------------------------------
 # Test
@@ -79,27 +108,44 @@ test:
 	@go test $(GO_PACKAGE_NAME)/...
 
 # -----------------------------------------------------------------------------
+# docker-build
+#  - https://docs.docker.com/engine/reference/commandline/build/
+# -----------------------------------------------------------------------------
+
+.PHONY: docker-build
+docker-build:
+	@docker build \
+		--build-arg BUILD_ITERATION=$(BUILD_ITERATION) \
+		--build-arg BUILD_VERSION=$(BUILD_VERSION) \
+		--build-arg GO_PACKAGE_NAME=$(GO_PACKAGE_NAME) \
+		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \	
+		--file Dockerfile \
+		--tag $(DOCKER_IMAGE_NAME) \
+		--tag $(DOCKER_IMAGE_NAME):$(BUILD_VERSION) \
+		.
+
+.PHONY: docker-build-package
+docker-build-package:
+	@docker build \
+		--build-arg BUILD_ITERATION=$(BUILD_ITERATION) \
+		--build-arg BUILD_VERSION=$(BUILD_VERSION) \
+		--build-arg GO_PACKAGE_NAME=$(GO_PACKAGE_NAME) \
+		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \
+		--file package.Dockerfile \
+		--no-cache \
+		--tag $(DOCKER_BUILD_IMAGE_NAME) \
+		.
+
+# -----------------------------------------------------------------------------
 # Package
 # -----------------------------------------------------------------------------
 
 .PHONY: package
-package: docker-package
+package: docker-build-package
 	@mkdir -p $(TARGET_DIRECTORY) || true
-	@CONTAINER_ID=$$(docker create $(DOCKER_IMAGE_NAME)); \
+	@CONTAINER_ID=$$(docker create $(DOCKER_BUILD_IMAGE_NAME)); \
 	docker cp $$CONTAINER_ID:/output/. $(TARGET_DIRECTORY)/; \
 	docker rm -v $$CONTAINER_ID
-
-
-.PHONY: docker-package
-docker-package:
-	@docker build \
-		--no-cache \
-		--build-arg PROGRAM_NAME=$(PROGRAM_NAME) \
-		--build-arg BUILD_VERSION=$(BUILD_VERSION) \
-		--build-arg BUILD_ITERATION=$(BUILD_ITERATION) \
-		--build-arg GO_PACKAGE_NAME=$(GO_PACKAGE_NAME) \
-		--tag $(DOCKER_IMAGE_NAME) \
-		.
 
 # -----------------------------------------------------------------------------
 # Utility targets

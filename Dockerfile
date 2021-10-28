@@ -3,15 +3,14 @@
 # -----------------------------------------------------------------------------
 
 ARG IMAGE_GO_BUILDER=golang:1.17.1
-ARG IMAGE_FPM_BUILDER=dockter/fpm:latest
-ARG IMAGE_FINAL=alpine
+ARG IMAGE_FINAL=scratch
 
 # -----------------------------------------------------------------------------
 # Stage: go_builder
 # -----------------------------------------------------------------------------
 
 FROM ${IMAGE_GO_BUILDER} as go_builder
-ENV REFRESHED_AT 2021-10-01a
+ENV REFRESHED_AT 2021-10-27
 LABEL Name="dockter/hello-world-go-builder" \
       Maintainer="nemo@dockter.com" \
       Version="1.0.0"
@@ -31,7 +30,7 @@ COPY . ${GOPATH}/src/${GO_PACKAGE_NAME}
 # Build go program.
 
 WORKDIR ${GOPATH}/src/${GO_PACKAGE_NAME}
-RUN make build
+RUN make build-scratch
 
 # --- Test go program ---------------------------------------------------------
 
@@ -50,85 +49,17 @@ RUN cd /output \
  && ls -laR
 
 # -----------------------------------------------------------------------------
-# Stage: fpm_builder
-# -----------------------------------------------------------------------------
-
-# Reference: https://github.com/jordansissel/fpm/blob/master/Dockerfile
-
-FROM ${IMAGE_FPM_BUILDER} as fpm_builder
-ENV REFRESHED_AT 2021-10-01b
-LABEL Name="dockter/hello-world-fpm-builder" \
-      Maintainer="nemo@dockter.com" \
-      Version="1.0.0"
-
-# Use arguments from prior stage.
-
-ARG PROGRAM_NAME
-ARG BUILD_VERSION
-ARG BUILD_ITERATION
-ARG HELLO_NAME
-ARG GO_PACKAGE_NAME
-
-# Debug.
-
-RUN echo "1) ${PROGRAM_NAME}" \
- && echo "2) ${BUILD_VERSION}" \
- && echo "3) ${BUILD_ITERATION}"
-
-# Copy files from prior stage.
-
-COPY --from=go_builder "/output/darwin/go-hello-world"      "/input/darwin/go-hello-world"
-COPY --from=go_builder "/output/linux/go-hello-world"       "/input/linux/go-hello-world"
-COPY --from=go_builder "/output/windows/go-hello-world.exe" "/input/windows/go-hello-world.exe"
-
-RUN cd /input \
- && ls -laR
-
-# FPM: https://fpm.readthedocs.io/en/latest/cli-reference.html
-
-# Create RPM package.
-
-RUN mkdir /output
-
-RUN fpm \
-  --input-type dir \
-  --output-type rpm \
-  --name ${PROGRAM_NAME} \
-  --package /output/${PROGRAM_NAME}-${BUILD_VERSION}.rpm \
-  --version ${BUILD_VERSION} \
-  --iteration ${BUILD_ITERATION} \
-  /input/linux=/usr/bin
-
-RUN cd /output \
- && ls -laR
-
-# Create DEB package.
-
-RUN fpm \
-  --deb-no-default-config-files \
-  --input-type dir \
-  --iteration ${BUILD_ITERATION} \
-  --name ${PROGRAM_NAME} \
-  --output-type deb \
-  --package /output/${PROGRAM_NAME}-${BUILD_VERSION}.deb \
-  --version ${BUILD_VERSION} \
-  /input/linux/=/usr/bin
-
-RUN cd /output \
- && ls -laR
-
-# -----------------------------------------------------------------------------
 # Stage: final
 # -----------------------------------------------------------------------------
 
 FROM ${IMAGE_FINAL} as final
-ENV REFRESHED_AT 2021-10-01a
+ENV REFRESHED_AT 2021-10-227
 LABEL Name="dockter/hello-world" \
       Maintainer="nemo@dockter.com" \
       Version="1.0.0"
 
 # Copy files from prior step.
 
-COPY --from=fpm_builder "/output/*" "/output/"
+COPY --from=go_builder "/output/scratch/go-hello-world" "/"
 
-CMD ["/bin/bash"]
+CMD ["/go-hello-world"]
