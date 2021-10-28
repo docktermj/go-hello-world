@@ -11,7 +11,7 @@ ARG IMAGE_FINAL=alpine
 # -----------------------------------------------------------------------------
 
 FROM ${IMAGE_GO_BUILDER} as go_builder
-ENV REFRESHED_AT 2021-10-01a
+ENV REFRESHED_AT 2021-10-27
 LABEL Name="dockter/hello-world-go-builder" \
       Maintainer="nemo@dockter.com" \
       Version="1.0.0"
@@ -46,17 +46,14 @@ RUN make build
 RUN mkdir -p /output \
  && cp -R ${GOPATH}/src/${GO_PACKAGE_NAME}/target/*  /output/
 
-RUN cd /output \
- && ls -laR
-
 # -----------------------------------------------------------------------------
 # Stage: fpm_builder
+#  - Reference: https://github.com/jordansissel/fpm/blob/master/Dockerfile
+#  - FPM: https://fpm.readthedocs.io/en/latest/cli-reference.html
 # -----------------------------------------------------------------------------
 
-# Reference: https://github.com/jordansissel/fpm/blob/master/Dockerfile
-
 FROM ${IMAGE_FPM_BUILDER} as fpm_builder
-ENV REFRESHED_AT 2021-10-01b
+ENV REFRESHED_AT 2021-10-27
 LABEL Name="dockter/hello-world-fpm-builder" \
       Maintainer="nemo@dockter.com" \
       Version="1.0.0"
@@ -69,26 +66,14 @@ ARG BUILD_ITERATION
 ARG HELLO_NAME
 ARG GO_PACKAGE_NAME
 
-# Debug.
-
-RUN echo "1) ${PROGRAM_NAME}" \
- && echo "2) ${BUILD_VERSION}" \
- && echo "3) ${BUILD_ITERATION}"
-
 # Copy files from prior stage.
 
-COPY --from=go_builder "/output/darwin/go-hello-world"      "/input/darwin/go-hello-world"
-COPY --from=go_builder "/output/linux/go-hello-world"       "/input/linux/go-hello-world"
-COPY --from=go_builder "/output/windows/go-hello-world.exe" "/input/windows/go-hello-world.exe"
-
-RUN cd /input \
- && ls -laR
-
-# FPM: https://fpm.readthedocs.io/en/latest/cli-reference.html
+COPY --from=go_builder "/output/darwin/go-hello-world"      "/output/darwin/go-hello-world"
+COPY --from=go_builder "/output/linux/go-hello-world"       "/output/linux/go-hello-world"
+COPY --from=go_builder "/output/scratch/go-hello-world"     "/output/scratch/go-hello-world"
+COPY --from=go_builder "/output/windows/go-hello-world.exe" "/output/windows/go-hello-world.exe"
 
 # Create RPM package.
-
-RUN mkdir /output
 
 RUN fpm \
   --input-type dir \
@@ -97,10 +82,7 @@ RUN fpm \
   --package /output/${PROGRAM_NAME}-${BUILD_VERSION}.rpm \
   --version ${BUILD_VERSION} \
   --iteration ${BUILD_ITERATION} \
-  /input/linux=/usr/bin
-
-RUN cd /output \
- && ls -laR
+  /output/linux=/usr/bin
 
 # Create DEB package.
 
@@ -112,17 +94,14 @@ RUN fpm \
   --output-type deb \
   --package /output/${PROGRAM_NAME}-${BUILD_VERSION}.deb \
   --version ${BUILD_VERSION} \
-  /input/linux/=/usr/bin
-
-RUN cd /output \
- && ls -laR
+  /output/linux/=/usr/bin
 
 # -----------------------------------------------------------------------------
 # Stage: final
 # -----------------------------------------------------------------------------
 
 FROM ${IMAGE_FINAL} as final
-ENV REFRESHED_AT 2021-10-01a
+ENV REFRESHED_AT 2021-10-27
 LABEL Name="dockter/hello-world" \
       Maintainer="nemo@dockter.com" \
       Version="1.0.0"
