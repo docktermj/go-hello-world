@@ -36,13 +36,13 @@ build-linux:
 	@GOOS=linux \
 	GOARCH=amd64 \
 	go build \
-	  -ldflags \
-	    "-X main.programName=${PROGRAM_NAME} \
-	     -X main.buildVersion=${BUILD_VERSION} \
-	     -X main.buildIteration=${BUILD_ITERATION} \
-	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
-	    " \
-	  -o $(GO_PACKAGE_NAME)
+		-ldflags \
+			"-X main.programName=${PROGRAM_NAME} \
+			-X main.buildVersion=${BUILD_VERSION} \
+			-X main.buildIteration=${BUILD_ITERATION} \
+			-X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+			" \
+		-o $(GO_PACKAGE_NAME)
 	@mkdir -p $(TARGET_DIRECTORY)/linux || true
 	@mv $(GO_PACKAGE_NAME) $(TARGET_DIRECTORY)/linux
 
@@ -52,13 +52,13 @@ build-macos:
 	@GOOS=darwin \
 	GOARCH=amd64 \
 	go build \
-	  -ldflags \
-	    "-X main.programName=${PROGRAM_NAME} \
-	     -X main.buildVersion=${BUILD_VERSION} \
-	     -X main.buildIteration=${BUILD_ITERATION} \
-	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
-	    " \
-	  -o $(GO_PACKAGE_NAME)
+		-ldflags \
+			"-X main.programName=${PROGRAM_NAME} \
+			-X main.buildVersion=${BUILD_VERSION} \
+			-X main.buildIteration=${BUILD_ITERATION} \
+			-X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+			" \
+		-o $(GO_PACKAGE_NAME)
 	@mkdir -p $(TARGET_DIRECTORY)/darwin || true
 	@mv $(GO_PACKAGE_NAME) $(TARGET_DIRECTORY)/darwin
 
@@ -69,19 +69,19 @@ build-scratch:
 	GOARCH=amd64 \
 	CGO_ENABLED=0 \
 	go build \
-	  -a \
-      -installsuffix cgo \
-	  -ldflags \
-	    "-s \
-	     -w \
-	     -X main.programName=${PROGRAM_NAME} \
-	     -X main.buildVersion=${BUILD_VERSION} \
-	     -X main.buildIteration=${BUILD_ITERATION} \
-	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
-	    " \
-	  -o $(GO_PACKAGE_NAME)
+		-a \
+		-installsuffix cgo \
+		-ldflags \
+			"-s \
+			-w \
+			-X main.programName=${PROGRAM_NAME} \
+			-X main.buildVersion=${BUILD_VERSION} \
+			-X main.buildIteration=${BUILD_ITERATION} \
+			-X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+			" \
+		-o $(GO_PACKAGE_NAME)
 	@mkdir -p $(TARGET_DIRECTORY)/scratch || true
-	@mv $(GO_PACKAGE_NAME) $(TARGET_DIRECTORY)/scratch	
+	@mv $(GO_PACKAGE_NAME) $(TARGET_DIRECTORY)/scratch
 
 
 .PHONY: build-windows
@@ -89,13 +89,13 @@ build-windows:
 	@GOOS=windows \
 	GOARCH=amd64 \
 	go build \
-	  -ldflags \
-	    "-X main.programName=${PROGRAM_NAME} \
-	     -X main.buildVersion=${BUILD_VERSION} \
-	     -X main.buildIteration=${BUILD_ITERATION} \
-	     -X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
-	    " \
-	  -o $(GO_PACKAGE_NAME).exe
+		-ldflags \
+			"-X main.programName=${PROGRAM_NAME} \
+			-X main.buildVersion=${BUILD_VERSION} \
+			-X main.buildIteration=${BUILD_ITERATION} \
+			-X github.com/docktermj/go-hello-world-module.helloName=${HELLO_NAME} \
+			" \
+		-o $(GO_PACKAGE_NAME).exe
 	@mkdir -p $(TARGET_DIRECTORY)/windows || true
 	@mv $(GO_PACKAGE_NAME).exe $(TARGET_DIRECTORY)/windows
 
@@ -155,16 +155,16 @@ package: docker-build-package
 .PHONY: docker-run
 docker-run:
 	@docker run \
-	    --interactive \
-	    --tty \
-	    --name $(DOCKER_CONTAINER_NAME) \
-	    $(DOCKER_IMAGE_NAME)
+		--interactive \
+		--tty \
+		--name $(DOCKER_CONTAINER_NAME) \
+		$(DOCKER_IMAGE_NAME)
 
 
 .PHONY: clean
 clean:
 	@docker rm --force $(DOCKER_CONTAINER_NAME) || true
-	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) || true	
+	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) || true
 	@rm -rf $(TARGET_DIRECTORY) || true
 	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
@@ -172,8 +172,8 @@ clean:
 .PHONY: print-make-variables
 print-make-variables:
 	@$(foreach V,$(sort $(.VARIABLES)), \
-	   $(if $(filter-out environment% default automatic, \
-	   $(origin $V)),$(warning $V=$($V) ($(value $V)))))
+		$(if $(filter-out environment% default automatic, \
+		$(origin $V)),$(warning $V=$($V) ($(value $V)))))
 
 
 .PHONY: help
